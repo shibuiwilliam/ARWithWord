@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
@@ -8,13 +9,14 @@ using UnityEngine.XR.ARSubsystems;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField] GameObject cube;
+    [SerializeField] GameObject text;
+
     private ARRaycastManager arRaycastManager;
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
     // Start is called before the first frame update
     void Start()
     {
-
         arRaycastManager = GetComponent<ARRaycastManager>();
     }
 
@@ -29,8 +31,10 @@ public class SpawnManager : MonoBehaviour
             {
                 if (arRaycastManager.Raycast(touch.position, hits, TrackableType.PlaneWithinPolygon))
                 {
+                    
                     Pose hitPose = hits[0].pose;
-                    Instantiate(cube, hitPose.position, hitPose.rotation);
+                    Instantiate(text, hitPose.position, hitPose.rotation);
+                    //Instantiate(cube, hitPose.position, hitPose.rotation);
                 }
             }
         }
