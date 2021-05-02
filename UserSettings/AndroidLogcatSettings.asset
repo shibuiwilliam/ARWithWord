@@ -1,66 +1,48 @@
 {
     "m_SelectedDeviceId": "09051FDD4004MT",
     "m_SelectedPackage": {
-        "deviceId": "09051FDD4004MT",
-        "name": "com.whair.ARWithWord",
-        "processId": 11304,
+        "deviceId": "",
+        "name": "",
+        "processId": 0,
         "exited": false
     },
     "m_SelectedPriority": 0,
     "m_KnownPackagesForSerialization": [
         {
             "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 16671,
+            "exited": true
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 17305,
+            "exited": true
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 15048,
+            "exited": true
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 20587,
+            "exited": true
+        },
+        {
+            "deviceId": "09051FDD4004MT",
             "name": "com.google.android.apps.nexuslauncher",
-            "processId": 14927,
+            "processId": 23150,
             "exited": false
         },
         {
             "deviceId": "09051FDD4004MT",
             "name": "com.whair.ARWithWord",
-            "processId": 10714,
+            "processId": 22333,
             "exited": true
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 11124,
-            "exited": true
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 15182,
-            "exited": true
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 16875,
-            "exited": false
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 8744,
-            "exited": false
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 8838,
-            "exited": false
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 10749,
-            "exited": false
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 11304,
-            "exited": false
         }
     ],
     "m_Tags": {

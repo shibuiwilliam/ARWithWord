@@ -1,13 +1,7 @@
 ﻿using System;
-public class Constants
+static class Constants
 {
-    public Constants()
-    {
-    }
-
-    public static String[] CocoLabel()
-    {
-        String[] cocoLabel = new string[80] {
+    public static readonly string[] cocoLabelEN = {
             "person",
             "bicycle",
             "car",
@@ -89,6 +83,4 @@ public class Constants
             "hair drier",
             "toothbrush"
         };
-        return cocoLabel;
-    }
 }
