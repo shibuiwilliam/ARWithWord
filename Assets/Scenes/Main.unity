@@ -413,7 +413,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 700cc24931d584e95801c737b001a3f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 474562726361190053, guid: 1cf097eb0778643e1a9d0ba3f8692732, type: 3}
+  goText: {fileID: 474562726361190053, guid: 1cf097eb0778643e1a9d0ba3f8692732, type: 3}
   m_arCameraManager: {fileID: 2004849048}
   m_RawImage: {fileID: 0}
   m_goObjectDetector: {fileID: 407443939}

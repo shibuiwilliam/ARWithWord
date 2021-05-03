@@ -85,6 +85,7 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
 
     public IEnumerator Detect(Color32[] picture, Action<IList<BoundingBox>> callback)
     {
+        Debug.Log("Run detection");
         using (var tensor = TransformInput(picture, this.IMAGE_SIZE, this.IMAGE_SIZE))
         {
             var inputs = new Dictionary<string, Tensor>();
@@ -99,6 +100,7 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
             IList<BoundingBox> results = results_l.Concat(results_m).ToList();
 
             IList<BoundingBox> boxes = FilterBoundingBoxes(results, 5, this.minConfidence);
+            Debug.Log($"Detected {boxes.Count()} items");
             callback(boxes);
         }
     }
@@ -143,7 +145,7 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
                     float[] predictedClasses = ExtractClasses(yoloModelOutput, cx, cy, channel);
                     var (topResultIndex, topResultScore) = GetTopResult(predictedClasses);
                     var topScore = topResultScore * confidence;
-                    Debug.Log($"DEBUG: results: {topResultIndex.ToString()}");
+                    Debug.Log($"DEBUG: results: {topResultIndex} with score {topScore}");
 
                     if (topScore < threshold)
                     {

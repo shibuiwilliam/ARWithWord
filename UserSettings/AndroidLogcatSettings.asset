@@ -10,24 +10,6 @@
     "m_KnownPackagesForSerialization": [
         {
             "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 22333,
-            "exited": true
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 23342,
-            "exited": true
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 22844,
-            "exited": true
-        },
-        {
-            "deviceId": "09051FDD4004MT",
             "name": "com.google.android.apps.nexuslauncher",
             "processId": 13653,
             "exited": false
@@ -35,13 +17,31 @@
         {
             "deviceId": "09051FDD4004MT",
             "name": "com.whair.ARWithWord",
-            "processId": 11288,
+            "processId": 18933,
             "exited": true
         },
         {
             "deviceId": "09051FDD4004MT",
             "name": "com.whair.ARWithWord",
-            "processId": 12395,
+            "processId": 19492,
+            "exited": true
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 20098,
+            "exited": true
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 20675,
+            "exited": true
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 22269,
             "exited": true
         }
     ],

@@ -14,7 +14,7 @@ using Unity.Barracuda;
 
 public class SpawnManager : MonoBehaviour
 {
-    [SerializeField] GameObject text;
+    [SerializeField] GameObject goText;
 
     [SerializeField]
     ARCameraManager m_arCameraManager;
@@ -51,10 +51,12 @@ public class SpawnManager : MonoBehaviour
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
     public Color colorTag = new Color(0.3843137f, 0, 0.9333333f);
-    private static GUIStyle labelStyle;
+    //private static GUIStyle labelStyle;
     private static Texture2D boxOutlineTexture;
     private IList<BoundingBox> boxOutlines;
     public List<BoundingBox> boxSavedOutlines = new List<BoundingBox>();
+
+    private bool isDetectionNeeded = false;
     private bool isDetecting = false;
     private int staticNum = 0;
     public bool localization = false;
@@ -69,15 +71,15 @@ public class SpawnManager : MonoBehaviour
 
     void Start()
     {
-        arRaycastManager = GetComponent<ARRaycastManager>();
+        this.arRaycastManager = GetComponent<ARRaycastManager>();
 
         boxOutlineTexture = new Texture2D(1, 1);
         boxOutlineTexture.SetPixel(0, 0, this.colorTag);
         boxOutlineTexture.Apply();
 
-        labelStyle = new GUIStyle();
-        labelStyle.fontSize = 50;
-        labelStyle.normal.textColor = this.colorTag;
+        //labelStyle = new GUIStyle();
+        //labelStyle.fontSize = 50;
+        //labelStyle.normal.textColor = this.colorTag;
 
         this.objectDetector = goObjectDetector.GetComponent<TinyYolo3Detector>();
         this.objectDetector.Start();
@@ -95,24 +97,48 @@ public class SpawnManager : MonoBehaviour
             {
                 if (arRaycastManager.Raycast(touch.position, hits, TrackableType.PlaneWithinPolygon))
                 {
-                    Debug.Log("touched!");
                     Pose hitPose = hits[0].pose;
-                    Instantiate(text, hitPose.position, hitPose.rotation);
+                    Debug.Log($"touched ({hitPose.position.x},{hitPose.position.y},{hitPose.position.z})!");
+                    this.isDetectionNeeded = true;
+                    //Detect();
+                    if (this.boxOutlines.Count > 0)
+                    {
+                        //this.goText.text = this.boxOutlines[0].ToString();
+                        this.goText.GetComponent<TextMesh>().text = this.boxOutlines[0].ToString();
+                        Debug.Log($"allocate detected item {this.boxOutlines[0]}");
+
+                        Instantiate(goText, hitPose.position, hitPose.rotation);
+                        this.boxOutlines.Clear();
+                        this.isDetectionNeeded = false;
+                        Debug.Log("allocated!!!");
+                    }
                 }
             }
         }
 
         if (this.boxOutlines.Count > 0)
         {
-            foreach (var outlines in this.boxOutlines)
+            int i = 0;
+            foreach (var outline in this.boxOutlines)
             {
-                Debug.Log($"detected bounding box {outlines.ToString()}");
+                Debug.Log($"{i} detected bounding box {outline.ToString()}");
+                i++;
+
+                float x = outline.Dimensions.X * this.scaleFactor + this.shiftX;
+                float y = outline.Dimensions.Y * this.scaleFactor + this.shiftY;
+                Debug.Log($"{i} detected position {x}:{y}");
+                this.isDetectionNeeded = false;
             }
         }
     }
 
     unsafe void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
     {
+        if (!this.isDetectionNeeded)
+        {
+            return;
+        }
+
         if (!arCameraManager.TryAcquireLatestCpuImage(out XRCpuImage image))
         {
             return;
@@ -141,6 +167,7 @@ public class SpawnManager : MonoBehaviour
         buffer.Dispose();
 
         Detect();
+        
     }
 
     public void OnGUI()
@@ -190,6 +217,10 @@ public class SpawnManager : MonoBehaviour
     private void Detect()
     {
         if (this.isDetecting)
+        {
+            return;
+        }
+        if (!this.isDetectionNeeded)
         {
             return;
         }
@@ -393,7 +424,7 @@ public class SpawnManager : MonoBehaviour
 
     private static void DrawLabel(Rect position, string text)
     {
-        GUI.Label(position, text, labelStyle);
+        //GUI.Label(position, text, labelStyle);
     }
 
 }
