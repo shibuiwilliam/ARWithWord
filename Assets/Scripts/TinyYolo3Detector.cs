@@ -6,6 +6,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
+
+public class Parameters
+{
+    public int ROW_COUNT;
+    public int COL_COUNT;
+    public int CELL_WIDTH;
+    public int CELL_HEIGHT;
+    public Parameters(int ROW_COUNT, int COL_COUNT, int CELL_WIDTH, int CELL_HEIGHT)
+    {
+        this.ROW_COUNT = ROW_COUNT;
+        this.COL_COUNT = COL_COUNT;
+        this.CELL_WIDTH = CELL_WIDTH;
+        this.CELL_HEIGHT = CELL_HEIGHT;
+    }
+}
+
 public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
 {
 
@@ -25,24 +41,19 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
     private const int IMAGE_MEAN = 0;
     private const float IMAGE_STD = 255.0F;
     private const int _IMAGE_SIZE = 416;
-    public int IMAGE_SIZE { get => _IMAGE_SIZE; }
+    public int IMAGE_SIZE
+    {
+        get => _IMAGE_SIZE;
+    }
 
     public float minConfidence = 0.25f;
 
     private IWorker worker;
+    private Model model;
 
-    public Dictionary<string, int> params_l = new Dictionary<string, int>() {
-        { "ROW_COUNT", 13 },
-        { "COL_COUNT", 13 },
-        { "CELL_WIDTH", 32 },
-        { "CELL_HEIGHT", 32 }
-    };
-    public Dictionary<string, int> params_m = new Dictionary<string, int>() {
-        { "ROW_COUNT", 26 },
-        { "COL_COUNT", 26 },
-        { "CELL_WIDTH", 16 },
-        { "CELL_HEIGHT", 16 }
-    };
+    public Parameters paramsL = new Parameters(13, 13, 32, 32);
+    public Parameters paramsM = new Parameters(26, 26, 16, 16);
+
     public const int BOXES_PER_CELL = 3;
     public const int BOX_INFO_FEATURE_COUNT = 5;
 
@@ -65,29 +76,29 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
         {
             this.labels = Constants.cocoLabelEN;
         }
-        Debug.Log("loaded labels");
         this.classLength = this.labels.Length;
-        Model model = ModelLoader.Load(this.modelFile);
-        this.worker = GraphicsWorker.GetWorker(model);
+        this.model = ModelLoader.Load(this.modelFile);
+        this.worker = GraphicsWorker.GetWorker(this.model);
+        Debug.Log($"Initialized model and labels: {this.classLength} classes");
     }
 
 
-    public IEnumerator Detect(Color32[] picture, System.Action<IList<BoundingBox>> callback)
+    public IEnumerator Detect(Color32[] picture, Action<IList<BoundingBox>> callback)
     {
-        using (var tensor = TransformInput(picture, IMAGE_SIZE, IMAGE_SIZE))
+        using (var tensor = TransformInput(picture, this.IMAGE_SIZE, this.IMAGE_SIZE))
         {
             var inputs = new Dictionary<string, Tensor>();
             inputs.Add(this.inputName, tensor);
-            yield return StartCoroutine(worker.StartManualSchedule(inputs));
+            yield return StartCoroutine(this.worker.StartManualSchedule(inputs));
             //worker.Execute(inputs);
-            var output_l = worker.PeekOutput(this.outputNameL);
-            var output_m = worker.PeekOutput(this.outputNameM);
+            var output_l = this.worker.PeekOutput(this.outputNameL);
+            var output_m = this.worker.PeekOutput(this.outputNameM);
             //Debug.Log("Output: " + output);
-            var results_l = ParseOutputs(output_l, minConfidence, params_l);
-            var results_m = ParseOutputs(output_m, minConfidence, params_m);
-            var results = results_l.Concat(results_m).ToList();
+            var results_l = ParseOutputs(output_l, this.minConfidence, this.paramsL);
+            var results_m = ParseOutputs(output_m, this.minConfidence, this.paramsM);
+            IList<BoundingBox> results = results_l.Concat(results_m).ToList();
 
-            var boxes = FilterBoundingBoxes(results, 5, minConfidence);
+            IList<BoundingBox> boxes = FilterBoundingBoxes(results, 5, this.minConfidence);
             callback(boxes);
         }
     }
@@ -110,13 +121,13 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
     }
 
 
-    private IList<BoundingBox> ParseOutputs(Tensor yoloModelOutput, float threshold, Dictionary<string, int> parameters)
+    private IList<BoundingBox> ParseOutputs(Tensor yoloModelOutput, float threshold, Parameters parameters)
     {
         var boxes = new List<BoundingBox>();
 
-        for (int cy = 0; cy < parameters["COL_COUNT"]; cy++)
+        for (int cy = 0; cy < parameters.COL_COUNT; cy++)
         {
-            for (int cx = 0; cx < parameters["ROW_COUNT"]; cx++)
+            for (int cx = 0; cx < parameters.ROW_COUNT; cx++)
             {
                 for (int box = 0; box < BOXES_PER_CELL; box++)
                 {
@@ -132,7 +143,7 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
                     float[] predictedClasses = ExtractClasses(yoloModelOutput, cx, cy, channel);
                     var (topResultIndex, topResultScore) = GetTopResult(predictedClasses);
                     var topScore = topResultScore * confidence;
-                    Debug.Log("DEBUG: results: " + topResultIndex.ToString());
+                    Debug.Log($"DEBUG: results: {topResultIndex.ToString()}");
 
                     if (topScore < threshold)
                     {
@@ -164,7 +175,6 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
     private float Sigmoid(float value)
     {
         var k = (float)Math.Exp(value);
-
         return k / (1.0f + k);
     }
 
@@ -174,7 +184,6 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
         var maxVal = values.Max();
         var exp = values.Select(v => Math.Exp(v - maxVal));
         var sumExp = exp.Sum();
-
         return exp.Select(v => (float)(v / sumExp)).ToArray();
     }
 
@@ -193,17 +202,16 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
 
     private float GetConfidence(Tensor modelOutput, int x, int y, int channel)
     {
-        //Debug.Log("ModelOutput " + modelOutput);
         return Sigmoid(modelOutput[0, x, y, channel + 4]);
     }
 
 
-    private CellDimensions MapBoundingBoxToCell(int x, int y, int box, BoundingBoxDimensions boxDimensions, Dictionary<string, int> parameters)
+    private CellDimensions MapBoundingBoxToCell(int x, int y, int box, BoundingBoxDimensions boxDimensions, Parameters parameters)
     {
         return new CellDimensions
         {
-            X = ((float)y + Sigmoid(boxDimensions.X)) * parameters["CELL_WIDTH"],
-            Y = ((float)x + Sigmoid(boxDimensions.Y)) * parameters["CELL_HEIGHT"],
+            X = ((float)y + Sigmoid(boxDimensions.X)) * parameters.CELL_WIDTH,
+            Y = ((float)x + Sigmoid(boxDimensions.Y)) * parameters.CELL_HEIGHT,
             Width = (float)Math.Exp(boxDimensions.Width) * anchors[6 + box * 2],
             Height = (float)Math.Exp(boxDimensions.Height) * anchors[6 + box * 2 + 1],
         };
@@ -232,6 +240,14 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
             .First();
     }
 
+
+    private List<ValueTuple<int, float>> GetOrderedResult(float[] predictedClasses)
+    {
+        return predictedClasses
+            .Select((predictedClass, index) => (Index: index, Value: predictedClass))
+            .OrderByDescending(result => result.Value)
+            .ToList();
+    }
 
     private float IntersectionOverUnion(Rect boundingBoxA, Rect boundingBoxB)
     {

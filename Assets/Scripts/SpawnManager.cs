@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Barracuda;
 
 public class SpawnManager : MonoBehaviour
@@ -60,15 +61,15 @@ public class SpawnManager : MonoBehaviour
 
     Texture2D m_Texture;
 
+    private void OnEnable()
+    {
+        Debug.Log("initialize AR camera manager frame received");
+        m_arCameraManager.frameReceived += OnCameraFrameReceived;
+    }
+
     void Start()
     {
         arRaycastManager = GetComponent<ARRaycastManager>();
-
-        if (m_arCameraManager != null)
-        {
-            Debug.Log("initialize AR camera manager frame received");
-            m_arCameraManager.frameReceived += OnCameraFrameReceived;
-        }
 
         boxOutlineTexture = new Texture2D(1, 1);
         boxOutlineTexture.SetPixel(0, 0, this.colorTag);
@@ -100,57 +101,58 @@ public class SpawnManager : MonoBehaviour
                 }
             }
         }
+
+        if (this.boxOutlines.Count > 0)
+        {
+            foreach (var outlines in this.boxOutlines)
+            {
+                Debug.Log($"detected bounding box {outlines.ToString()}");
+            }
+        }
     }
 
     unsafe void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
     {
-        XRCpuImage xRCpuImage;
-        if (!arCameraManager.TryAcquireLatestCpuImage(out xRCpuImage))
+        if (!arCameraManager.TryAcquireLatestCpuImage(out XRCpuImage image))
         {
             return;
         }
 
-        TextureFormat format = TextureFormat.RGBA32;
-        if (m_Texture==null || m_Texture.width != xRCpuImage.width || m_Texture.height!=xRCpuImage.height)
+        var conversionParams = new XRCpuImage.ConversionParams
         {
-            m_Texture = new Texture2D(xRCpuImage.width, xRCpuImage.height, format, false);
-        }
+            inputRect = new RectInt(0, 0, image.width, image.height),
+            outputDimensions = new Vector2Int(image.width, image.height),
+            outputFormat = TextureFormat.RGBA32,
+            transformation = XRCpuImage.Transformation.None
+        };
+        int imageSize = image.GetConvertedDataSize(conversionParams);
+        var buffer = new NativeArray<byte>(imageSize, Allocator.Temp);
+        image.Convert(conversionParams, new IntPtr(buffer.GetUnsafePtr()), buffer.Length);
+        image.Dispose();
 
-        XRCpuImage.ConversionParams conversionParams = new XRCpuImage.ConversionParams(xRCpuImage, format, XRCpuImage.Transformation.None);
-        var rawTextureData = m_Texture.GetRawTextureData<byte>();
-        try
-        {
-            xRCpuImage.Convert(conversionParams, new IntPtr(rawTextureData.GetUnsafePtr()), rawTextureData.Length);
-        }
-        finally
-        {
-            xRCpuImage.Dispose();
-        }
+        this.m_Texture = new Texture2D(
+            conversionParams.outputDimensions.x,
+            conversionParams.outputDimensions.y,
+            conversionParams.outputFormat,
+            false
+        );
+        this.m_Texture.LoadRawTextureData(buffer);
+        this.m_Texture.Apply();
+        buffer.Dispose();
 
-        m_Texture.Apply();
-        if (staticNum > 150)
-        {
-            localization = true;
-        }
-        else
-        {
-            Detect();
-            GroupBoxOutlines();
-        }
-
-        m_RawImage.texture = m_Texture;
+        Detect();
     }
 
     public void OnGUI()
     {
-        if (this.boxSavedOutlines != null && this.boxSavedOutlines.Any())
-        {
-            foreach (var outline in this.boxSavedOutlines)
-            {
-                Debug.Log("detected to draw box.");
-                DrawBoxOutline(outline);
-            }
-        }
+        //if (this.boxSavedOutlines != null && this.boxSavedOutlines.Any())
+        //{
+        //    foreach (var outline in this.boxSavedOutlines)
+        //    {
+        //        Debug.Log($"Detected to draw box {outline.ToString()}.");
+        //        DrawBoxOutline(outline);
+        //    }
+        //}
     }
 
     public void OnRefresh()
@@ -163,12 +165,98 @@ public class SpawnManager : MonoBehaviour
 
     void OnDisable()
     {
-        if (m_arCameraManager != null)
-        {
-            m_arCameraManager.frameReceived -= OnCameraFrameReceived;
-        }
+        m_arCameraManager.frameReceived -= OnCameraFrameReceived;
     }
 
+
+    private void CalculateShift()
+    {
+        int smallest;
+
+        if (Screen.width < Screen.height)
+        {
+            smallest = Screen.width;
+            this.shiftY = (Screen.height - smallest) / 2f;
+        }
+        else
+        {
+            smallest = Screen.height;
+            this.shiftX = (Screen.width - smallest) / 2f;
+        }
+
+        this.scaleFactor = smallest / (float)this.objectDetector.IMAGE_SIZE;
+    }
+
+    private void Detect()
+    {
+        if (this.isDetecting)
+        {
+            return;
+        }
+
+        this.isDetecting = true;
+        StartCoroutine(
+            ProcessImage(
+                this.objectDetector.IMAGE_SIZE, result =>
+                {
+                    StartCoroutine(
+                        this.objectDetector.Detect(
+                            result, boxes =>
+                            {
+                                this.boxOutlines = boxes;
+                                Resources.UnloadUnusedAssets();
+                                this.isDetecting = false;
+                            }
+                        )
+                    );
+                }
+            )
+        );
+    }
+
+
+    private IEnumerator ProcessImage(int inputSize, Action<Color32[]> callback)
+    {
+        Coroutine croped = StartCoroutine(
+            TextureTools.CropSquare(
+                m_Texture, TextureTools.RectOptions.Center, snap =>
+                {
+                    var scaled = Scale(snap, inputSize);
+                    var rotated = Rotate(scaled.GetPixels32(), scaled.width, scaled.height);
+                    callback(rotated);
+                }
+            )
+        );
+        yield return croped;
+    }
+
+
+    private Texture2D Scale(Texture2D texture, int imageSize)
+    {
+        Texture2D scaled = TextureTools.scaled(texture, imageSize, imageSize, FilterMode.Bilinear);
+        return scaled;
+    }
+
+
+    private Color32[] Rotate(Color32[] pixels, int width, int height)
+    {
+        Color32[] rotate = TextureTools.RotateImageMatrix(pixels, width, height, 90);
+        return rotate;
+    }
+
+
+    private void DrawBoxOutline(BoundingBox outline)
+    {
+        var x = outline.Dimensions.X * this.scaleFactor + this.shiftX;
+        var width = outline.Dimensions.Width * this.scaleFactor;
+        var y = outline.Dimensions.Y * this.scaleFactor + this.shiftY;
+        var height = outline.Dimensions.Height * this.scaleFactor;
+
+        DrawRectangle(new Rect(x, y, width, height), 10, this.colorTag);
+        string message = $"Localizing {outline.Label}: {(int)(outline.Confidence * 100)}%";
+        Debug.Log(message);
+        DrawLabel(new Rect(x, y - 80, 200, 20), message);
+    }
 
     private void GroupBoxOutlines()
     {
@@ -262,19 +350,19 @@ public class SpawnManager : MonoBehaviour
 
     private bool IsSameObject(BoundingBox outline1, BoundingBox outline2)
     {
-        var xMin1 = outline1.Dimensions.X * this.scaleFactor + this.shiftX;
+        var xMin1 = (outline1.Dimensions.X * this.scaleFactor) + this.shiftX;
         var width1 = outline1.Dimensions.Width * this.scaleFactor;
-        var yMin1 = outline1.Dimensions.Y * this.scaleFactor + this.shiftY;
+        var yMin1 = (outline1.Dimensions.Y * this.scaleFactor) + this.shiftY;
         var height1 = outline1.Dimensions.Height * this.scaleFactor;
-        float center_x1 = xMin1 + width1 / 2f;
-        float center_y1 = yMin1 + height1 / 2f;
+        float center_x1 = xMin1 + (width1 / 2f);
+        float center_y1 = yMin1 + (height1 / 2f);
 
-        var xMin2 = outline2.Dimensions.X * this.scaleFactor + this.shiftX;
+        var xMin2 = (outline2.Dimensions.X * this.scaleFactor) + this.shiftX;
         var width2 = outline2.Dimensions.Width * this.scaleFactor;
-        var yMin2 = outline2.Dimensions.Y * this.scaleFactor + this.shiftY;
+        var yMin2 = (outline2.Dimensions.Y * this.scaleFactor) + this.shiftY;
         var height2 = outline2.Dimensions.Height * this.scaleFactor;
-        float center_x2 = xMin2 + width2 / 2f;
-        float center_y2 = yMin2 + height2 / 2f;
+        float center_x2 = xMin2 + (width2 / 2f);
+        float center_y2 = yMin2 + (height2 / 2f);
 
         bool cover_x = (xMin2 < center_x1) && (center_x1 < (xMin2 + width2));
         bool cover_y = (yMin2 < center_y1) && (center_y1 < (yMin2 + height2));
@@ -282,81 +370,6 @@ public class SpawnManager : MonoBehaviour
         bool contain_y = (yMin1 < center_y2) && (center_y2 < (yMin1 + height1));
 
         return (cover_x && cover_y) || (contain_x && contain_y);
-    }
-
-    private void CalculateShift()
-    {
-        int smallest;
-
-        if (Screen.width < Screen.height)
-        {
-            smallest = Screen.width;
-            this.shiftY = (Screen.height - smallest) / 2f;
-        }
-        else
-        {
-            smallest = Screen.height;
-            this.shiftX = (Screen.width - smallest) / 2f;
-        }
-
-        this.scaleFactor = smallest / (float)this.objectDetector.IMAGE_SIZE;
-    }
-
-    private void Detect()
-    {
-        if (this.isDetecting)
-        {
-            return;
-        }
-
-        this.isDetecting = true;
-        StartCoroutine(
-            ProcessImage(
-                this.objectDetector.IMAGE_SIZE, result =>
-                {
-                    StartCoroutine(
-                        this.objectDetector.Detect(
-                            result, boxes =>
-                            {
-                                this.boxOutlines = boxes;
-                                Resources.UnloadUnusedAssets();
-                                this.isDetecting = false;
-                            }
-                        )
-                    );
-                }
-            )
-        );
-    }
-
-
-    private IEnumerator ProcessImage(int inputSize, System.Action<Color32[]> callback)
-    {
-        Coroutine croped = StartCoroutine(
-            TextureTools.CropSquare(
-                m_Texture, TextureTools.RectOptions.Center, snap =>
-                {
-                    var scaled = Scale(snap, inputSize);
-                    var rotated = Rotate(scaled.GetPixels32(), scaled.width, scaled.height);
-                    callback(rotated);
-                }
-            )
-        );
-        yield return croped;
-    }
-
-
-    private void DrawBoxOutline(BoundingBox outline)
-    {
-        var x = outline.Dimensions.X * this.scaleFactor + this.shiftX;
-        var width = outline.Dimensions.Width * this.scaleFactor;
-        var y = outline.Dimensions.Y * this.scaleFactor + this.shiftY;
-        var height = outline.Dimensions.Height * this.scaleFactor;
-
-        DrawRectangle(new Rect(x, y, width, height), 10, this.colorTag);
-        string message = $"Localizing {outline.Label}: {(int)(outline.Confidence * 100)}%";
-        Debug.Log(message);
-        DrawLabel(new Rect(x, y - 80, 200, 20), message);
     }
 
 
@@ -383,16 +396,4 @@ public class SpawnManager : MonoBehaviour
         GUI.Label(position, text, labelStyle);
     }
 
-    private Texture2D Scale(Texture2D texture, int imageSize)
-    {
-        var scaled = TextureTools.scaled(texture, imageSize, imageSize, FilterMode.Bilinear);
-        return scaled;
-    }
-
-
-    private Color32[] Rotate(Color32[] pixels, int width, int height)
-    {
-        var rotate = TextureTools.RotateImageMatrix(pixels, width, height, 90);
-        return rotate;
-    }
 }

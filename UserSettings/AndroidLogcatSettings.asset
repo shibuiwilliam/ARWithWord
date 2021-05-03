@@ -11,37 +11,37 @@
         {
             "deviceId": "09051FDD4004MT",
             "name": "com.whair.ARWithWord",
-            "processId": 16671,
+            "processId": 22333,
             "exited": true
         },
         {
             "deviceId": "09051FDD4004MT",
             "name": "com.whair.ARWithWord",
-            "processId": 17305,
+            "processId": 23342,
             "exited": true
         },
         {
             "deviceId": "09051FDD4004MT",
             "name": "com.whair.ARWithWord",
-            "processId": 15048,
-            "exited": true
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 20587,
+            "processId": 22844,
             "exited": true
         },
         {
             "deviceId": "09051FDD4004MT",
             "name": "com.google.android.apps.nexuslauncher",
-            "processId": 23150,
+            "processId": 13653,
             "exited": false
         },
         {
             "deviceId": "09051FDD4004MT",
             "name": "com.whair.ARWithWord",
-            "processId": 22333,
+            "processId": 11288,
+            "exited": true
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 12395,
             "exited": true
         }
     ],

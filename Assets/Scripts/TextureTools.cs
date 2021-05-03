@@ -78,15 +78,27 @@ public class TextureTools
                     break;
             }
 
-            if (texture.width < rect.x + rect.width || texture.height < rect.y + rect.height ||
-                xRect > rect.x + texture.width || yRect > rect.y + texture.height ||
-                xRect < 0 || yRect < 0 || rect.width < 0 || rect.height < 0)
+            if (texture.width < rect.x + rect.width
+                || texture.height < rect.y + rect.height
+                || xRect > rect.x + texture.width
+                || yRect > rect.y + texture.height
+                || xRect < 0
+                || yRect < 0
+                || rect.width < 0
+                || rect.height < 0
+            )
             {
                 throw new ArgumentException("Set value crop less than origin texture size");
             }
 
-            result.SetPixels(texture.GetPixels(Mathf.FloorToInt(xRect), Mathf.FloorToInt(yRect),
-                                            Mathf.FloorToInt(widthRect), Mathf.FloorToInt(heightRect)));
+            result.SetPixels(
+                texture.GetPixels(
+                    Mathf.FloorToInt(xRect),
+                    Mathf.FloorToInt(yRect),
+                    Mathf.FloorToInt(widthRect),
+                    Mathf.FloorToInt(heightRect)
+                )
+            );
             yield return null;
             result.Apply();
         }
@@ -102,8 +114,7 @@ public class TextureTools
     }
 
 
-    public static Texture2D CropWithRect(
-        WebCamTexture texture, Rect rect, RectOptions rectOptions, int xMod, int yMod)
+    public static Texture2D CropWithRect(WebCamTexture texture, Rect rect, RectOptions rectOptions, int xMod, int yMod)
     {
         if (rect.height < 0 || rect.width < 0)
         {
