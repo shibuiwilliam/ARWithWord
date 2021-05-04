@@ -1,1 +1,12 @@
 ARWithWord filter=lfs diff=lfs merge=lfs -text
+ARWithWord/Library/PackageCache/com.unity.burst@1.4.7/.Runtime/hostlin/lld filter=lfs diff=lfs merge=lfs -text
+ARWithWord/Library/PackageCache/com.unity.burst@1.4.7/.Runtime/hostmac/lld filter=lfs diff=lfs merge=lfs -text
+ARWithWord/Library/PackageCache/com.unity.sysroot.linux-x86_64@0.1.14-preview/data~/payload.tar.7z filter=lfs diff=lfs merge=lfs -text
+ARWithWord/Library/PackageCache/com.unity.xr.arkit@4.1.7/Runtime/iOS/Xcode1200/libUnityARKit.a filter=lfs diff=lfs merge=lfs -text
+ARWithWord/Library/PackageCache/com.unity.toolchain.macos-x86_64-linux-x86_64@0.1.20-preview/data~/payload.tar.7z filter=lfs diff=lfs merge=lfs -text
+ARWithWord/ProjectSettings filter=lfs diff=lfs merge=lfs -text
+ARWithWord/UserSettings filter=lfs diff=lfs merge=lfs -text
+ARWithWord/packages.config filter=lfs diff=lfs merge=lfs -text
+ARWithWord/Assets filter=lfs diff=lfs merge=lfs -text
+ARWithWord/Library filter=lfs diff=lfs merge=lfs -text
+ARWithWord/Packages filter=lfs diff=lfs merge=lfs -text
