@@ -12,11 +12,12 @@ public interface ObjectDetector
     }
 
     void Start();
-    IEnumerator Detect(Color32[] picture, System.Action<IList<BoundingBox>> callback);
+    IEnumerator Detect(Color32[] picture, Action<IList<ItemInCenter>> callback);
 
 }
 
-public class PredictedItem
+
+public class Prediction
 {
     public string Label
     {
@@ -24,30 +25,6 @@ public class PredictedItem
         set;
     }
     public float Confidence
-    {
-        get;
-        set;
-    }
-}
-
-public class DimensionsBase
-{
-    public float X
-    {
-        get;
-        set;
-    }
-    public float Y
-    {
-        get;
-        set;
-    }
-    public float Height
-    {
-        get;
-        set;
-    }
-    public float Width
     {
         get;
         set;
@@ -68,50 +45,7 @@ public class XY
     }
 }
 
-public class BoundingBoxDimensions : DimensionsBase { }
-
-public class CellDimensions : DimensionsBase { }
-
-
-public class BoundingBox
-{
-    public BoundingBoxDimensions Dimensions
-    {
-        get;
-        set;
-    }
-
-    public string Label
-    {
-        get;
-        set;
-    }
-
-    public float Confidence
-    {
-        get;
-        set;
-    }
-
-    public bool Used
-    {
-        get;
-        set;
-    }
-
-    public Rect Rect
-    {
-        get { return new Rect(Dimensions.X, Dimensions.Y, Dimensions.Width, Dimensions.Height); }
-    }
-
-    public override string ToString()
-    {
-        string prediction = $"{Label}:{Confidence}, X:Y=({Dimensions.X}:{Dimensions.Y}) W:H=({Dimensions.Width}:{Dimensions.Height})";
-        return prediction;
-    }
-}
-
-public class ItemCenter
+public class ItemInCenter
 {
     public XY CenterPoint
     {
@@ -119,7 +53,7 @@ public class ItemCenter
         set;
     }
 
-    public List<PredictedItem> PredictedItems
+    public Prediction PredictedItem
     {
         get;
         set;
@@ -127,26 +61,8 @@ public class ItemCenter
 
     public override string ToString()
     {
-        OrderPredictedItems();
-        string predictions = "";
-        foreach (var p in this.PredictedItems)
-        {
-            predictions += $"{p.Label}: {p.Confidence}\n";
-        }
+        string predictions = $"{this.PredictedItem.Label}: {this.PredictedItem.Confidence}";
         return predictions;
     }
 
-    public void OrderPredictedItems()
-    {
-        this.PredictedItems = this.PredictedItems
-            .OrderByDescending(result => result.Confidence)
-            .ToList();
-    }
-
-    public PredictedItem GetFirst()
-    {
-        return this.PredictedItems
-            .OrderByDescending(result => result.Confidence)
-            .First();
-    }
 }

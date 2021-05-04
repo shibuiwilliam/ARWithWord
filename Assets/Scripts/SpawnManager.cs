@@ -51,9 +51,8 @@ public class SpawnManager : MonoBehaviour
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
     public Color colorTag = new Color(0.3843137f, 0, 0.9333333f);
-    private static Texture2D boxOutlineTexture;
-    private IList<BoundingBox> boxOutlines;
-    public List<BoundingBox> boxSavedOutlines = new List<BoundingBox>();
+
+    private IList<ItemInCenter> itemsInCenter;
 
     private bool isDetectionNeeded = false;
     private bool isDetecting = false;
@@ -70,11 +69,6 @@ public class SpawnManager : MonoBehaviour
     void Start()
     {
         this.arRaycastManager = GetComponent<ARRaycastManager>();
-
-        boxOutlineTexture = new Texture2D(1, 1);
-        boxOutlineTexture.SetPixel(0, 0, this.colorTag);
-        boxOutlineTexture.Apply();
-
 
         this.objectDetector = goObjectDetector.GetComponent<TinyYolo3Detector>();
         this.objectDetector.Start();
@@ -95,15 +89,13 @@ public class SpawnManager : MonoBehaviour
                     Pose hitPose = hits[0].pose;
                     Debug.Log($"touched ({hitPose.position.x},{hitPose.position.y},{hitPose.position.z})!");
                     this.isDetectionNeeded = true;
-                    //Detect();
-                    if (this.boxOutlines.Count > 0)
+                    if (this.itemsInCenter.Count > 0)
                     {
-                        //this.goText.text = this.boxOutlines[0].ToString();
-                        this.goText.GetComponent<TextMesh>().text = this.boxOutlines[0].ToString();
-                        Debug.Log($"allocate detected item {this.boxOutlines[0]}");
+                        this.goText.GetComponent<TextMesh>().text = this.itemsInCenter[0].ToString();
+                        Debug.Log($"allocate detected item {this.itemsInCenter[0]}");
 
                         Instantiate(goText, hitPose.position, hitPose.rotation);
-                        this.boxOutlines.Clear();
+                        this.itemsInCenter.Clear();
                         this.isDetectionNeeded = false;
                         Debug.Log("allocated!!!");
                     }
@@ -111,16 +103,16 @@ public class SpawnManager : MonoBehaviour
             }
         }
 
-        if (this.boxOutlines.Count > 0)
+        if (this.itemsInCenter.Count > 0)
         {
             int i = 0;
-            foreach (var outline in this.boxOutlines)
+            foreach (var itemInCenter in this.itemsInCenter)
             {
-                Debug.Log($"{i} detected bounding box {outline.ToString()}");
+                Debug.Log($"{i} detected {itemInCenter.ToString()}");
                 i++;
 
-                float x = outline.Dimensions.X * this.scaleFactor + this.shiftX;
-                float y = outline.Dimensions.Y * this.scaleFactor + this.shiftY;
+                float x = itemInCenter.CenterPoint.X * this.scaleFactor + this.shiftX;
+                float y = itemInCenter.CenterPoint.Y * this.scaleFactor + this.shiftY;
                 Debug.Log($"{i} detected position {x}:{y}");
                 this.isDetectionNeeded = false;
             }
@@ -162,16 +154,14 @@ public class SpawnManager : MonoBehaviour
         buffer.Dispose();
 
         Detect();
-        
+
     }
 
 
     public void OnRefresh()
     {
         localization = false;
-        staticNum = 0;
-        boxSavedOutlines.Clear();
-        boxOutlines.Clear();
+        this.itemsInCenter.Clear();
     }
 
     void OnDisable()
@@ -216,9 +206,9 @@ public class SpawnManager : MonoBehaviour
                 {
                     StartCoroutine(
                         this.objectDetector.Detect(
-                            result, boxes =>
+                            result, itemsInCenter =>
                             {
-                                this.boxOutlines = boxes;
+                                this.itemsInCenter = itemsInCenter;
                                 Resources.UnloadUnusedAssets();
                                 this.isDetecting = false;
                             }
