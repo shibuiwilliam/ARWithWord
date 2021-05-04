@@ -12,6 +12,34 @@ using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Barracuda;
 
+public class DetectionTarget
+{
+    public Texture2D CurrentTexture2D
+    {
+        get;
+        set;
+    }
+    public Pose HitPose
+    {
+        get;
+        set;
+    }
+}
+
+public class Detected
+{
+    public Pose HitPose
+    {
+        get;
+        set;
+    }
+    public IList<ItemInCenter> ItemsInCenter
+    {
+        get;
+        set;
+    }
+}
+
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField] GameObject goText;
@@ -22,15 +50,6 @@ public class SpawnManager : MonoBehaviour
     {
         get { return m_arCameraManager; }
         set { m_arCameraManager = value; }
-    }
-
-
-    [SerializeField]
-    RawImage m_RawImage;
-    public RawImage rawImage
-    {
-        get { return m_RawImage; }
-        set { m_RawImage = value; }
     }
 
     [SerializeField]
@@ -50,20 +69,33 @@ public class SpawnManager : MonoBehaviour
     private ARRaycastManager arRaycastManager;
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
-    public Color colorTag = new Color(0.3843137f, 0, 0.9333333f);
+    private static Texture2D _texture;
 
-    private IList<ItemInCenter> itemsInCenter;
-
-    private bool isDetectionNeeded = false;
     private bool isDetecting = false;
-    public bool localization = false;
 
     Texture2D m_Texture;
+
+    Queue<DetectionTarget> detectionTargetQueue = new Queue<DetectionTarget>();
+    Queue<Detected> detectedQueue = new Queue<Detected>();
+
+    private List<string> tmpList = new List<string>() { "a", "bb", "ccc", "dddd", "eeeeee" };
+
+    private List<Color32> colors = new List<Color32>() {
+        new Color32(255, 115, 200, 255),
+        new Color32(241, 233, 137, 255),
+        new Color32(108, 109, 101, 255),
+        new Color32(128, 244, 222, 255),
+        new Color32(134, 222, 249, 255),
+        new Color32(228, 178, 249, 255)
+    };
 
     private void OnEnable()
     {
         Debug.Log("initialize AR camera manager frame received");
         m_arCameraManager.frameReceived += OnCameraFrameReceived;
+        _texture = new Texture2D(1, 1);
+        _texture.SetPixel(0, 0, new Color(0.3843137f, 0, 0.9333333f));
+        _texture.Apply();
     }
 
     void Start()
@@ -78,7 +110,6 @@ public class SpawnManager : MonoBehaviour
 
     void Update()
     {
-
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -87,56 +118,82 @@ public class SpawnManager : MonoBehaviour
                 if (arRaycastManager.Raycast(touch.position, hits, TrackableType.PlaneWithinPolygon))
                 {
                     Pose hitPose = hits[0].pose;
-                    Debug.Log($"touched ({hitPose.position.x},{hitPose.position.y},{hitPose.position.z})!");
-                    this.isDetectionNeeded = true;
-                    if (this.itemsInCenter.Count > 0)
+                    var detectionTarget = new DetectionTarget
                     {
-                        foreach (var itemInCenter in this.itemsInCenter)
-                        {
-                            this.goText.GetComponent<TextMesh>().text = itemInCenter.PredictedItem.Label;
-                            Debug.Log($"allocate detected item {itemInCenter.PredictedItem.Label}");
+                        CurrentTexture2D = this.m_Texture,
+                        HitPose = hitPose
+                    };
+                    this.detectionTargetQueue.Enqueue(detectionTarget);
+                    Debug.Log($"touched ({hitPose.position.x}, {hitPose.position.y}, {hitPose.position.z})!");
 
+                    int z = 0;
+                    foreach (var s in this.tmpList)
+                    {
+                        this.goText.GetComponent<TextMesh>().text = s;
+
+                        int colorIndex = UnityEngine.Random.Range(0, colors.Count());
+                        this.goText.GetComponent<TextMesh>().color = this.colors[colorIndex];
+
+                        int characterSize = UnityEngine.Random.Range(6, 18);
+                        this.goText.GetComponent<TextMesh>().characterSize = characterSize;
+                        var hitPoseRandom = new Vector3(hitPose.position.x, hitPose.position.y, hitPose.position.z);
+                        if (z != 0)
+                        {
                             float rX = UnityEngine.Random.Range(-1.0f, 1.0f);
                             float rY = UnityEngine.Random.Range(-1.0f, 1.0f);
                             float rZ = UnityEngine.Random.Range(-1.0f, 1.0f);
-                            var hitPoseRandom = new Vector3(hitPose.position.x + rX, hitPose.position.y + rY, hitPose.position.z + rZ);
-
-                            Instantiate(goText, hitPoseRandom, hitPose.rotation);
-                            Debug.Log($"allocated {itemInCenter.PredictedItem.Label} on {hitPoseRandom.x}, {hitPoseRandom.y}, {hitPoseRandom.z}");
+                            hitPoseRandom.x += rX;
+                            hitPoseRandom.y += rY;
+                            hitPoseRandom.z += rZ;
                         }
-                        this.itemsInCenter.Clear();
-                        this.isDetectionNeeded = false;
-
-                        Debug.Log("allocated!!!");
+                        Instantiate(goText, hitPoseRandom, hitPose.rotation);
+                        Debug.Log($"{z} allocated {s} at {hitPoseRandom.x}, {hitPoseRandom.y}, {hitPoseRandom.z}");
+                        z++;
                     }
                 }
             }
         }
 
-        if (this.itemsInCenter.Count > 0)
+        if (this.detectedQueue.Count() > 0)
         {
-            int i = 0;
-            foreach (var itemInCenter in this.itemsInCenter)
+            var detected = this.detectedQueue.Dequeue();
+            if (detected.ItemsInCenter.Count > 0)
             {
-                Debug.Log($"{i} detected {itemInCenter}");
-                i++;
+                Debug.Log($"Detected results: {detected.ItemsInCenter.Count()}");
+                int i = 0;
+                foreach (var itemInCenter in detected.ItemsInCenter)
+                {
+                    Debug.Log($"{i} detected {itemInCenter} in {itemInCenter.CenterPoint.X} : {itemInCenter.CenterPoint.Y}");
 
-                float x = itemInCenter.CenterPoint.X * this.scaleFactor + this.shiftX;
-                float y = itemInCenter.CenterPoint.Y * this.scaleFactor + this.shiftY;
-                Debug.Log($"{i} detected position {x} : {y}");
-                this.isDetectionNeeded = false;
+                    this.goText.GetComponent<TextMesh>().text = itemInCenter.PredictedItem.Label;
+
+                    int colorIndex = UnityEngine.Random.Range(0, colors.Count());
+                    this.goText.GetComponent<TextMesh>().color = this.colors[colorIndex];
+
+                    int characterSize = UnityEngine.Random.Range(6, 18);
+                    this.goText.GetComponent<TextMesh>().characterSize = characterSize;
+                    Debug.Log($"allocate detected item {itemInCenter.PredictedItem.Label}");
+
+                    var hitPoseRandom = new Vector3(detected.HitPose.position.x, detected.HitPose.position.y, detected.HitPose.position.z);
+                    if (i != 0)
+                    {
+                        float rX = UnityEngine.Random.Range(-3.0f, 3.0f);
+                        float rY = UnityEngine.Random.Range(-3.0f, 3.0f);
+                        float rZ = UnityEngine.Random.Range(-3.0f, 3.0f);
+                        hitPoseRandom.x += rX;
+                        hitPoseRandom.y += rY;
+                        hitPoseRandom.z += rZ;
+                    }
+
+                    Instantiate(goText, hitPoseRandom, detected.HitPose.rotation);
+                    Debug.Log($"allocated {itemInCenter.PredictedItem.Label} on {hitPoseRandom.x}, {hitPoseRandom.y}, {hitPoseRandom.z}");
+                }
             }
-            this.itemsInCenter.Clear();
         }
     }
 
     unsafe void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
     {
-        if (!this.isDetectionNeeded)
-        {
-            return;
-        }
-
         if (!arCameraManager.TryAcquireLatestCpuImage(out XRCpuImage image))
         {
             return;
@@ -165,14 +222,13 @@ public class SpawnManager : MonoBehaviour
         buffer.Dispose();
 
         Detect();
-
     }
 
 
     public void OnRefresh()
     {
-        localization = false;
-        this.itemsInCenter.Clear();
+        this.detectedQueue.Clear();
+        this.detectionTargetQueue.Clear();
     }
 
     void OnDisable()
@@ -205,21 +261,30 @@ public class SpawnManager : MonoBehaviour
         {
             return;
         }
-        if (!this.isDetectionNeeded)
+        if (this.detectionTargetQueue.Count() == 0)
         {
             return;
         }
 
+        var detectionTarget = this.detectionTargetQueue.Dequeue();
         this.isDetecting = true;
         StartCoroutine(
             ProcessImage(
-                this.objectDetector.IMAGE_SIZE, result =>
+                this.objectDetector.IMAGE_SIZE, detectionTarget.CurrentTexture2D, picture =>
                 {
                     StartCoroutine(
                         this.objectDetector.Detect(
-                            result, itemsInCenter =>
+                            picture, itemsInCenter =>
                             {
-                                this.itemsInCenter = itemsInCenter;
+                                if (itemsInCenter.Count > 0)
+                                {
+                                    var detected = new Detected
+                                    {
+                                        HitPose = detectionTarget.HitPose,
+                                        ItemsInCenter = itemsInCenter,
+                                    };
+                                    this.detectedQueue.Enqueue(detected);
+                                }
                                 Resources.UnloadUnusedAssets();
                                 this.isDetecting = false;
                             }
@@ -231,11 +296,11 @@ public class SpawnManager : MonoBehaviour
     }
 
 
-    private IEnumerator ProcessImage(int inputSize, Action<Color32[]> callback)
+    private IEnumerator ProcessImage(int inputSize, Texture2D texture2D, Action<Color32[]> callback)
     {
         Coroutine croped = StartCoroutine(
             TextureTools.CropSquare(
-                m_Texture, TextureTools.RectOptions.Center, snap =>
+                texture2D, TextureTools.RectOptions.Center, snap =>
                 {
                     var scaled = Scale(snap, inputSize);
                     var rotated = Rotate(scaled.GetPixels32(), scaled.width, scaled.height);

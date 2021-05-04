@@ -3,69 +3,81 @@
     "m_SelectedPackage": {
         "deviceId": "09051FDD4004MT",
         "name": "com.whair.ARWithWord",
-        "processId": 8290,
+        "processId": 16563,
         "exited": false
     },
     "m_SelectedPriority": 0,
     "m_KnownPackagesForSerialization": [
         {
             "deviceId": "09051FDD4004MT",
-            "name": "com.google.android.apps.nexuslauncher",
-            "processId": 13653,
-            "exited": false
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 18933,
-            "exited": true
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 19492,
-            "exited": true
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 20098,
-            "exited": true
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 20675,
-            "exited": true
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 22269,
-            "exited": true
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 30346,
-            "exited": false
-        },
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 4392,
-            "exited": false
-        },
-        {
-            "deviceId": "09051FDD4004MT",
             "name": "com.whair.ARWithWord",
             "processId": 6185,
-            "exited": false
+            "exited": true
         },
         {
             "deviceId": "09051FDD4004MT",
             "name": "com.whair.ARWithWord",
             "processId": 8290,
+            "exited": true
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.ubercab.eats",
+            "processId": 32593,
+            "exited": true
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.google.android.googlequicksearchbox:interactor",
+            "processId": 28453,
+            "exited": true
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 32380,
+            "exited": true
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.google.android.apps.nexuslauncher",
+            "processId": 4001,
+            "exited": false
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 3221,
+            "exited": false
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 8468,
+            "exited": false
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 11795,
+            "exited": false
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 13234,
+            "exited": false
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 13791,
+            "exited": false
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 16563,
             "exited": false
         }
     ],

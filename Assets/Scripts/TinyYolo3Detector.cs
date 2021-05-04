@@ -4,7 +4,6 @@ using Unity.Barracuda;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 
 public class Parameters
@@ -29,7 +28,8 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
 
     public enum LabelLanguages
     {
-        EN
+        EN,
+        JP
     };
     public LabelLanguages labelLanguage;
 
@@ -60,23 +60,23 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
     private int classLength;
     private string[] labels;
 
-    private float[] anchors = new float[]
-    {
-        10F, 14F,  23F, 27F,  37F, 58F,  81F, 82F,  135F, 169F,  344F, 319F
-    };
-
 
     public void Start()
     {
-        if (this.labelLanguage == LabelLanguages.EN)
+        switch(this.labelLanguage)
         {
-            this.labels = Constants.cocoLabelEN;
-        }
-        else
-        {
-            this.labels = Constants.cocoLabelEN;
+            case LabelLanguages.EN:
+                this.labels = Constants.cocoLabelEN;
+                break;
+            case LabelLanguages.JP:
+                this.labels = Constants.cocoLabelJP;
+                break;
+            default:
+                this.labels = Constants.cocoLabelEN;
+                break;
         }
         this.classLength = this.labels.Length;
+
         this.model = ModelLoader.Load(this.modelFile);
         this.worker = GraphicsWorker.GetWorker(this.model);
         Debug.Log($"Initialized model and labels: {this.classLength} classes");
@@ -94,7 +94,7 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
             var outputL = this.worker.PeekOutput(this.outputNameL);
             var outputM = this.worker.PeekOutput(this.outputNameM);
             List<ItemInCenter> results = ParseOutputs(outputL, outputM, this.paramsL, this.paramsM);
-
+            Debug.Log($"yielded {results.Count()} results");
             callback(results);
         }
     }
@@ -116,12 +116,7 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
         return new Tensor(1, height, width, 3, floatValues);
     }
 
-    private List<ItemInCenter> ParseOutputs(
-        Tensor yoloModelOutputL,
-        Tensor yoloModelOutputM,
-        Parameters parametersL,
-        Parameters parametersM
-    )
+    private List<ItemInCenter> ParseOutputs(Tensor yoloModelOutputL, Tensor yoloModelOutputM, Parameters parametersL, Parameters parametersM)
     {
         var itemsInCenter = new List<ItemInCenter>();
 
