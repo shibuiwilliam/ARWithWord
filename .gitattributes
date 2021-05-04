@@ -1,7 +1,1 @@
-Assets/Models/yolov3-tiny-416.onnx filter=lfs diff=lfs merge=lfs -text
-Assets/Models/yolov3-tiny-416.onnx.meta filter=lfs diff=lfs merge=lfs -text
-Packages/System.Drawing.Common.5.0.2/System.Drawing.Common.5.0.2.nupkg filter=lfs diff=lfs merge=lfs -text
-Packages/System.Drawing.Common.5.0.2/lib/netcoreapp3.0/System.Drawing.Common.xml filter=lfs diff=lfs merge=lfs -text
-Packages/System.Drawing.Common.5.0.2/ref/netcoreapp3.0/System.Drawing.Common.xml filter=lfs diff=lfs merge=lfs -text
-Packages/System.Drawing.Common.5.0.2/runtimes filter=lfs diff=lfs merge=lfs -text
-Unity filter=lfs diff=lfs merge=lfs -text
+ARWithWord filter=lfs diff=lfs merge=lfs -text

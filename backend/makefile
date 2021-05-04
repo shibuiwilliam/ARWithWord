@@ -1,6 +1,8 @@
   ABSOLUTE_PATH := $(shell pwd)
 DOCKERFILE := Dockerfile
+DOCKER_IMAGE_NAME := shibui/similar_word_api
 IMAGE_VERSION := 0.0.1
+
 
 .PHONY: lint
 lint:
@@ -25,4 +27,13 @@ req:
 		-f requirements.txt \
 		--output requirements.txt
 
+.PHONY: build
+build:
+	docker build \
+		-t $(DOCKER_IMAGE_NAME):$(IMAGE_VERSION) \
+		-f $(DOCKERFILE) \
+		.
 
+.PHONY: push
+push:
+	docker push $(DOCKER_IMAGE_NAME):$(IMAGE_VERSION)
