@@ -177,13 +177,6 @@ public class TextureTools
     }
 
 
-    /// <summary>
-    ///     Returns a scaled copy of given texture.
-    /// </summary>
-    /// <param name="tex">Source texure to scale</param>
-    /// <param name="width">Destination texture width</param>
-    /// <param name="height">Destination texture height</param>
-    /// <param name="mode">Filtering mode</param>
     public static Texture2D scaled(Texture2D src, int width, int height, FilterMode mode = FilterMode.Trilinear)
     {
         Rect texR = new Rect(0, 0, width, height);
@@ -195,13 +188,7 @@ public class TextureTools
         return result;
     }
 
-    /// <summary>
-    /// Scales the texture data of the given texture.
-    /// </summary>
-    /// <param name="tex">Texure to scale</param>
-    /// <param name="width">New width</param>
-    /// <param name="height">New height</param>
-    /// <param name="mode">Filtering mode</param>
+
     public static void scale(Texture2D tex, int width, int height, FilterMode mode = FilterMode.Trilinear)
     {
         Rect texR = new Rect(0, 0, width, height);

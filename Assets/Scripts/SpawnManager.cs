@@ -51,14 +51,12 @@ public class SpawnManager : MonoBehaviour
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
     public Color colorTag = new Color(0.3843137f, 0, 0.9333333f);
-    //private static GUIStyle labelStyle;
     private static Texture2D boxOutlineTexture;
     private IList<BoundingBox> boxOutlines;
     public List<BoundingBox> boxSavedOutlines = new List<BoundingBox>();
 
     private bool isDetectionNeeded = false;
     private bool isDetecting = false;
-    private int staticNum = 0;
     public bool localization = false;
 
     Texture2D m_Texture;
@@ -77,9 +75,6 @@ public class SpawnManager : MonoBehaviour
         boxOutlineTexture.SetPixel(0, 0, this.colorTag);
         boxOutlineTexture.Apply();
 
-        //labelStyle = new GUIStyle();
-        //labelStyle.fontSize = 50;
-        //labelStyle.normal.textColor = this.colorTag;
 
         this.objectDetector = goObjectDetector.GetComponent<TinyYolo3Detector>();
         this.objectDetector.Start();
@@ -170,17 +165,6 @@ public class SpawnManager : MonoBehaviour
         
     }
 
-    public void OnGUI()
-    {
-        //if (this.boxSavedOutlines != null && this.boxSavedOutlines.Any())
-        //{
-        //    foreach (var outline in this.boxSavedOutlines)
-        //    {
-        //        Debug.Log($"Detected to draw box {outline.ToString()}.");
-        //        DrawBoxOutline(outline);
-        //    }
-        //}
-    }
 
     public void OnRefresh()
     {
@@ -273,158 +257,6 @@ public class SpawnManager : MonoBehaviour
     {
         Color32[] rotate = TextureTools.RotateImageMatrix(pixels, width, height, 90);
         return rotate;
-    }
-
-
-    private void DrawBoxOutline(BoundingBox outline)
-    {
-        var x = outline.Dimensions.X * this.scaleFactor + this.shiftX;
-        var width = outline.Dimensions.Width * this.scaleFactor;
-        var y = outline.Dimensions.Y * this.scaleFactor + this.shiftY;
-        var height = outline.Dimensions.Height * this.scaleFactor;
-
-        DrawRectangle(new Rect(x, y, width, height), 10, this.colorTag);
-        string message = $"Localizing {outline.Label}: {(int)(outline.Confidence * 100)}%";
-        Debug.Log(message);
-        DrawLabel(new Rect(x, y - 80, 200, 20), message);
-    }
-
-    private void GroupBoxOutlines()
-    {
-        if (this.boxSavedOutlines.Count == 0)
-        {
-            if (this.boxOutlines == null || this.boxOutlines.Count == 0)
-            {
-                return;
-            }
-            foreach (var outline in this.boxOutlines)
-            {
-                this.boxSavedOutlines.Add(outline);
-            }
-            return;
-        }
-
-        bool addOutline = false;
-        foreach (var outline1 in this.boxOutlines)
-        {
-            bool unique = true;
-            List<BoundingBox> itemsToAdd = new List<BoundingBox>();
-            List<BoundingBox> itemsToRemove = new List<BoundingBox>();
-            foreach (var outline2 in this.boxSavedOutlines)
-            {
-                if (IsSameObject(outline1, outline2))
-                {
-                    unique = false;
-                    if (outline1.Confidence > outline2.Confidence + 0.05F)
-                    {
-                        Debug.Log("DEBUG: add detected boxes in this frame.");
-                        Debug.Log($"DEBUG: Add Label: {outline1.Label}. Confidence: {outline1.Confidence}.");
-                        Debug.Log($"DEBUG: Remove Label: {outline2.Label}. Confidence: {outline2.Confidence}.");
-
-                        itemsToRemove.Add(outline2);
-                        itemsToAdd.Add(outline1);
-                        addOutline = true;
-                        staticNum = 0;
-                        break;
-                    }
-                }
-            }
-            this.boxSavedOutlines.RemoveAll(item => itemsToRemove.Contains(item));
-            this.boxSavedOutlines.AddRange(itemsToAdd);
-
-            if (unique)
-            {
-                Debug.Log($"DEBUG: add detected boxes in this frame");
-                addOutline = true;
-                staticNum = 0;
-                this.boxSavedOutlines.Add(outline1);
-                Debug.Log($"Add Label: {outline1.Label}. Confidence: {outline1.Confidence}.");
-            }
-        }
-        if (!addOutline)
-        {
-            staticNum += 1;
-        }
-
-        List<BoundingBox> temp = new List<BoundingBox>();
-        foreach (var outline1 in this.boxSavedOutlines)
-        {
-            if (temp.Count == 0)
-            {
-                temp.Add(outline1);
-                continue;
-            }
-
-            List<BoundingBox> itemsToAdd = new List<BoundingBox>();
-            List<BoundingBox> itemsToRemove = new List<BoundingBox>();
-            foreach (var outline2 in temp)
-            {
-                if (IsSameObject(outline1, outline2))
-                {
-                    if (outline1.Confidence > outline2.Confidence)
-                    {
-                        itemsToRemove.Add(outline2);
-                        itemsToAdd.Add(outline1);
-                        Debug.Log("DEBUG: merge bounding box conflict!!!");
-                    }
-                }
-                else
-                {
-                    itemsToAdd.Add(outline1);
-                }
-            }
-            temp.RemoveAll(item => itemsToRemove.Contains(item));
-            temp.AddRange(itemsToAdd);
-        }
-        this.boxSavedOutlines = temp;
-    }
-
-    private bool IsSameObject(BoundingBox outline1, BoundingBox outline2)
-    {
-        var xMin1 = (outline1.Dimensions.X * this.scaleFactor) + this.shiftX;
-        var width1 = outline1.Dimensions.Width * this.scaleFactor;
-        var yMin1 = (outline1.Dimensions.Y * this.scaleFactor) + this.shiftY;
-        var height1 = outline1.Dimensions.Height * this.scaleFactor;
-        float center_x1 = xMin1 + (width1 / 2f);
-        float center_y1 = yMin1 + (height1 / 2f);
-
-        var xMin2 = (outline2.Dimensions.X * this.scaleFactor) + this.shiftX;
-        var width2 = outline2.Dimensions.Width * this.scaleFactor;
-        var yMin2 = (outline2.Dimensions.Y * this.scaleFactor) + this.shiftY;
-        var height2 = outline2.Dimensions.Height * this.scaleFactor;
-        float center_x2 = xMin2 + (width2 / 2f);
-        float center_y2 = yMin2 + (height2 / 2f);
-
-        bool cover_x = (xMin2 < center_x1) && (center_x1 < (xMin2 + width2));
-        bool cover_y = (yMin2 < center_y1) && (center_y1 < (yMin2 + height2));
-        bool contain_x = (xMin1 < center_x2) && (center_x2 < (xMin1 + width1));
-        bool contain_y = (yMin1 < center_y2) && (center_y2 < (yMin1 + height1));
-
-        return (cover_x && cover_y) || (contain_x && contain_y);
-    }
-
-
-    public static void DrawRectangle(Rect area, int frameWidth, Color color)
-    {
-        Rect lineArea = area;
-        lineArea.height = frameWidth;
-        GUI.DrawTexture(lineArea, boxOutlineTexture);
-
-        lineArea.y = area.yMax - frameWidth;
-        GUI.DrawTexture(lineArea, boxOutlineTexture);
-
-        lineArea = area;
-        lineArea.width = frameWidth;
-        GUI.DrawTexture(lineArea, boxOutlineTexture);
-
-        lineArea.x = area.xMax - frameWidth;
-        GUI.DrawTexture(lineArea, boxOutlineTexture);
-    }
-
-
-    private static void DrawLabel(Rect position, string text)
-    {
-        //GUI.Label(position, text, labelStyle);
     }
 
 }

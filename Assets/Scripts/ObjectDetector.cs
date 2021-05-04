@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using Unity.Barracuda;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -14,6 +14,20 @@ public interface ObjectDetector
     void Start();
     IEnumerator Detect(Color32[] picture, System.Action<IList<BoundingBox>> callback);
 
+}
+
+public class PredictedItem
+{
+    public string Label
+    {
+        get;
+        set;
+    }
+    public float Confidence
+    {
+        get;
+        set;
+    }
 }
 
 public class DimensionsBase
@@ -40,6 +54,19 @@ public class DimensionsBase
     }
 }
 
+public class XY
+{
+    public float X
+    {
+        get;
+        set;
+    }
+    public float Y
+    {
+        get;
+        set;
+    }
+}
 
 public class BoundingBoxDimensions : DimensionsBase { }
 
@@ -81,5 +108,45 @@ public class BoundingBox
     {
         string prediction = $"{Label}:{Confidence}, X:Y=({Dimensions.X}:{Dimensions.Y}) W:H=({Dimensions.Width}:{Dimensions.Height})";
         return prediction;
+    }
+}
+
+public class ItemCenter
+{
+    public XY CenterPoint
+    {
+        get;
+        set;
+    }
+
+    public List<PredictedItem> PredictedItems
+    {
+        get;
+        set;
+    }
+
+    public override string ToString()
+    {
+        OrderPredictedItems();
+        string predictions = "";
+        foreach (var p in this.PredictedItems)
+        {
+            predictions += $"{p.Label}: {p.Confidence}\n";
+        }
+        return predictions;
+    }
+
+    public void OrderPredictedItems()
+    {
+        this.PredictedItems = this.PredictedItems
+            .OrderByDescending(result => result.Confidence)
+            .ToList();
+    }
+
+    public PredictedItem GetFirst()
+    {
+        return this.PredictedItems
+            .OrderByDescending(result => result.Confidence)
+            .First();
     }
 }
