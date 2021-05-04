@@ -4,3 +4,4 @@ Packages/System.Drawing.Common.5.0.2/System.Drawing.Common.5.0.2.nupkg filter=lf
 Packages/System.Drawing.Common.5.0.2/lib/netcoreapp3.0/System.Drawing.Common.xml filter=lfs diff=lfs merge=lfs -text
 Packages/System.Drawing.Common.5.0.2/ref/netcoreapp3.0/System.Drawing.Common.xml filter=lfs diff=lfs merge=lfs -text
 Packages/System.Drawing.Common.5.0.2/runtimes filter=lfs diff=lfs merge=lfs -text
+Unity filter=lfs diff=lfs merge=lfs -text
