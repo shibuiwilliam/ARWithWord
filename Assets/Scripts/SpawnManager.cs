@@ -91,12 +91,22 @@ public class SpawnManager : MonoBehaviour
                     this.isDetectionNeeded = true;
                     if (this.itemsInCenter.Count > 0)
                     {
-                        this.goText.GetComponent<TextMesh>().text = this.itemsInCenter[0].ToString();
-                        Debug.Log($"allocate detected item {this.itemsInCenter[0]}");
+                        foreach (var itemInCenter in this.itemsInCenter)
+                        {
+                            this.goText.GetComponent<TextMesh>().text = itemInCenter.PredictedItem.Label;
+                            Debug.Log($"allocate detected item {itemInCenter.PredictedItem.Label}");
 
-                        Instantiate(goText, hitPose.position, hitPose.rotation);
+                            float rX = UnityEngine.Random.Range(-1.0f, 1.0f);
+                            float rY = UnityEngine.Random.Range(-1.0f, 1.0f);
+                            float rZ = UnityEngine.Random.Range(-1.0f, 1.0f);
+                            var hitPoseRandom = new Vector3(hitPose.position.x + rX, hitPose.position.y + rY, hitPose.position.z + rZ);
+
+                            Instantiate(goText, hitPoseRandom, hitPose.rotation);
+                            Debug.Log($"allocated {itemInCenter.PredictedItem.Label} on {hitPoseRandom.x}, {hitPoseRandom.y}, {hitPoseRandom.z}");
+                        }
                         this.itemsInCenter.Clear();
                         this.isDetectionNeeded = false;
+
                         Debug.Log("allocated!!!");
                     }
                 }
@@ -108,14 +118,15 @@ public class SpawnManager : MonoBehaviour
             int i = 0;
             foreach (var itemInCenter in this.itemsInCenter)
             {
-                Debug.Log($"{i} detected {itemInCenter.ToString()}");
+                Debug.Log($"{i} detected {itemInCenter}");
                 i++;
 
                 float x = itemInCenter.CenterPoint.X * this.scaleFactor + this.shiftX;
                 float y = itemInCenter.CenterPoint.Y * this.scaleFactor + this.shiftY;
-                Debug.Log($"{i} detected position {x}:{y}");
+                Debug.Log($"{i} detected position {x} : {y}");
                 this.isDetectionNeeded = false;
             }
+            this.itemsInCenter.Clear();
         }
     }
 
