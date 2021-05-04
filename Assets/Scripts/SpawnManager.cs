@@ -125,31 +125,6 @@ public class SpawnManager : MonoBehaviour
                     };
                     this.detectionTargetQueue.Enqueue(detectionTarget);
                     Debug.Log($"touched ({hitPose.position.x}, {hitPose.position.y}, {hitPose.position.z})!");
-
-                    int z = 0;
-                    foreach (var s in this.tmpList)
-                    {
-                        this.goText.GetComponent<TextMesh>().text = s;
-
-                        int colorIndex = UnityEngine.Random.Range(0, colors.Count());
-                        this.goText.GetComponent<TextMesh>().color = this.colors[colorIndex];
-
-                        int characterSize = UnityEngine.Random.Range(6, 18);
-                        this.goText.GetComponent<TextMesh>().characterSize = characterSize;
-                        var hitPoseRandom = new Vector3(hitPose.position.x, hitPose.position.y, hitPose.position.z);
-                        if (z != 0)
-                        {
-                            float rX = UnityEngine.Random.Range(-1.0f, 1.0f);
-                            float rY = UnityEngine.Random.Range(-1.0f, 1.0f);
-                            float rZ = UnityEngine.Random.Range(-1.0f, 1.0f);
-                            hitPoseRandom.x += rX;
-                            hitPoseRandom.y += rY;
-                            hitPoseRandom.z += rZ;
-                        }
-                        Instantiate(goText, hitPoseRandom, hitPose.rotation);
-                        Debug.Log($"{z} allocated {s} at {hitPoseRandom.x}, {hitPoseRandom.y}, {hitPoseRandom.z}");
-                        z++;
-                    }
                 }
             }
         }

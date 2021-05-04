@@ -157,7 +157,7 @@ MonoBehaviour:
   inputName: 000_net
   outputNameL: 016_convolutional
   outputNameM: 023_convolutional
-  minConfidence: 0.1
+  minConfidence: 0.2
 --- !u!4 &407443941
 Transform:
   m_ObjectHideFlags: 0
