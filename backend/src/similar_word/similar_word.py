@@ -41,7 +41,7 @@ class SimilarWordPredictor(object):
     ):
         response = urlopen(url)
         downloaded = 0
-        download_file_name = write_file_name + ".part"
+        download_file_name = f"{write_file_name}.part"
         with open(download_file_name, "wb") as f:
             while True:
                 chunk = response.read(chunk_size)
@@ -49,7 +49,6 @@ class SimilarWordPredictor(object):
                 if not chunk:
                     break
                 f.write(chunk)
-
         os.rename(download_file_name, write_file_name)
 
     def download_model(
@@ -76,7 +75,7 @@ class SimilarWordPredictor(object):
             url=url,
             write_file_name=gz_file_path,
         )
-        with gzip.open(gz_file_name, "rb") as f:
+        with gzip.open(gz_file_path, "rb") as f:
             with open(file_path, "wb") as f_out:
                 shutil.copyfileobj(f, f_out)
 
