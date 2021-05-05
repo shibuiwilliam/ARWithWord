@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter
 from logging import getLogger
 from typing import List
 from src.constants import LANGUAGE_ENUM
 
 from src.similar_word.similar_word import similar_word_predictor
-from src.data.schema import Prediction
+from src.data.schema import Prediction, PredictionRequest
 
 
 logger = getLogger(__name__)
@@ -12,14 +12,13 @@ logger = getLogger(__name__)
 router = APIRouter()
 
 
-@router.get("/", response_model=List[Prediction])
+@router.post("/", response_model=List[Prediction])
 def predict(
-    word: str,
-    topn: int = 20,
+    prediction_request: PredictionRequest,
 ):
     predictions = similar_word_predictor.predict(
-        word=word,
-        topn=topn,
+        word=prediction_request.word,
+        topn=prediction_request.topn,
     )
     return predictions
 
