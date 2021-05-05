@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: similar-word
+  namespace: similar-word
+spec:
+  storageClassName: "example-storageclass"
+  capacity:
+    storage: 40G
+  accessModes:
+    - ReadWriteOnce
+  claimRef:
+    name: similar-word
+    namespace: similar-word
+  gcePersistentDisk:
+    pdName: similar-word
+    fsType: ext4
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: similar-word
+  namespace: similar-word
+spec:
+  storageClassName: "example-storageclass"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 40G
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: similar-word
+  namespace: similar-word
+  labels:
+    app: similar-word
+    group: similar-word
+spec:
+  selector:
+    matchLabels:
+      app: similar-word
+  replicas: 2
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: similar-word
+        tier: web
+    spec:
+      containers:
+        - name: similar-word
+          image: shibui/similar_word_api:0.0.1
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 3000m
+              memory: "10000Mi"
+            requests:
+              cpu: 3000m
+              memory: "10000Mi"
+          volumeMounts:
+            - name: similar-word
+              mountPath: /opt/model/
+      volumes:
+        - name: similar-word
+          persistentVolumeClaim:
+            claimName: similar-word
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: similar-word
+  namespace: similar-word
+  labels:
+    app: similar-word
+spec:
+  selector:
+    app: similar-word
+    tier: web
+  ports:
+    - name: similar-word
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+  type: NodePort

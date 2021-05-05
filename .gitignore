@@ -201,3 +201,6 @@ sample_data/files/*
 secrets/*.sh
 saved_model/
 .DS_Store
+
+ingress.yaml
+
