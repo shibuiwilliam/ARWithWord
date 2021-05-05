@@ -2,8 +2,7 @@ from fastapi import FastAPI
 from logging import getLogger
 
 from src.api import (
-    root_health,
-    health_check,
+    health,
     similar_word,
 )
 
@@ -16,6 +15,5 @@ app = FastAPI(
     version="0.0.1",
 )
 
-app.include_router(root_health.router, prefix="", tags=["root_health"])
-app.include_router(health_check.router, prefix="/health-check", tags=["health_check"])
+app.include_router(health.router, prefix="", tags=["health"])
 app.include_router(similar_word.router, prefix="/similar-word", tags=["similar_word"])

@@ -37,7 +37,7 @@ class SimilarWordPredictor(object):
         if self.model_dimension not in [100, 300]:
             raise ValueError("model dimension must be one of 100 or 300")
 
-        self.file_path = self.download_model(if_exists="ignore")
+        self.file_path = self.download_model(force_download=False)
         self.fasttext_predictor = load_facebook_model(self.file_path)
         logger.info(f"loaded {self.file_path}")
 
@@ -52,8 +52,9 @@ class SimilarWordPredictor(object):
     ) -> List[Prediction]:
         logger.info(f"predict {word}")
 
-        if word in self.cache.keys():
-            return self.cache[word]
+        key = f"{word}_{topn}"
+        if key in self.cache.keys():
+            return self.cache[key]
 
         _predictions = self.fasttext_predictor.wv.most_similar(
             word,
@@ -76,20 +77,20 @@ class SimilarWordPredictor(object):
         # predictions = [p for p in _predictions if p[1] >= self.threshold and not repr(p[0]).startswith("'\\u")]
         logger.info(f"{word} prediction: {predictions}")
 
-        self.cache[word] = predictions
+        self.cache[key] = predictions
 
         return predictions
 
     def download_model(
         self,
-        if_exists: str = "strict",
+        force_download: bool = False,
     ):
         file_name = f"cc.{self.language.value}.{self.model_dimension}.bin"
         file_path = os.path.join(self.model_directory, file_name)
         logger.info(f"retrieve model {file_name}")
 
         if os.path.exists(file_path):
-            if if_exists == "ignore":
+            if not force_download:
                 logger.info(f"model {file_name} exists")
                 return file_path
 

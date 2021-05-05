@@ -16,8 +16,8 @@ spec:
         - /dev/null
       resources:
         limits:
-          cpu: 3000m
-          memory: "25000Mi"
+          cpu: 1000m
+          memory: "12000Mi"
         requests:
-          cpu: 3000m
-          memory: "25000Mi"
+          cpu: 1000m
+          memory: "12000Mi"
