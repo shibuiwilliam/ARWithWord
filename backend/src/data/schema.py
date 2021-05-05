@@ -1,4 +1,4 @@
-from typing import List, Tuple, Dict
+from typing import List
 from pydantic import BaseModel
 
 
@@ -10,3 +10,7 @@ class PredictionRequest(BaseModel):
 class Prediction(BaseModel):
     similar_word: str
     similarity: float
+
+
+class Predictions(BaseModel):
+    predictions: List[Prediction]

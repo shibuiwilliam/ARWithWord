@@ -9,7 +9,7 @@ from logging import getLogger
 
 from src.constants import LANGUAGE_ENUM
 from src.similar_word.similar_word import similar_word_predictor
-from src.data.schema import Prediction, PredictionRequest
+from src.data.schema import Predictions, PredictionRequest
 
 
 logger = getLogger(__name__)
@@ -32,7 +32,7 @@ def get_api_key(api_key_header: str = Security(api_key_header_auth)):
 
 @router.post(
     "/",
-    response_model=List[Prediction],
+    response_model=Predictions,
     dependencies=[Security(get_api_key)],
 )
 def predict(
@@ -47,7 +47,7 @@ def predict(
 
 @router.get(
     "/sample",
-    response_model=List[Prediction],
+    response_model=Predictions,
     dependencies=[Security(get_api_key)],
 )
 def predict_sample():

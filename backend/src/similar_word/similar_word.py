@@ -12,7 +12,7 @@ from logging import getLogger
 from typing import List, Tuple, Dict
 
 from src.constants import LANGUAGE_ENUM
-from src.data.schema import Prediction
+from src.data.schema import Prediction, Predictions
 
 
 logger = getLogger(__name__)
@@ -43,39 +43,40 @@ class SimilarWordPredictor(object):
 
         self.threshold = threshold
 
-        self.cache: Dict[str, List[Prediction]] = {}
+        self.cache: Dict[str, Predictions] = {}
 
     def predict(
         self,
         word: str,
         topn: int = 20,
-    ) -> List[Prediction]:
+    ) -> Predictions:
         logger.info(f"predict {word}")
 
         key = f"{word}_{topn}"
         if key in self.cache.keys():
             return self.cache[key]
 
-        _predictions = self.fasttext_predictor.wv.most_similar(
+        results = self.fasttext_predictor.wv.most_similar(
             word,
             topn=topn,
         )
 
-        predictions = []
-        for p in _predictions:
-            if p[1] < self.threshold:
+        _predictions = []
+        for r in results:
+            if r[1] < self.threshold:
                 continue
-            if repr(p[0]).startswith("'\\u"):
+            if repr(r[0]).startswith("'\\u"):
                 continue
-            predictions.append(
+            _predictions.append(
                 Prediction(
-                    similar_word=p[0],
-                    similarity=p[1],
+                    similar_word=r[0],
+                    similarity=r[1],
                 )
             )
 
         # predictions = [p for p in _predictions if p[1] >= self.threshold and not repr(p[0]).startswith("'\\u")]
-        logger.info(f"{word} prediction: {predictions}")
+        logger.info(f"{word} prediction: {_predictions}")
+        predictions = Predictions(predictions=_predictions)
 
         self.cache[key] = predictions
 

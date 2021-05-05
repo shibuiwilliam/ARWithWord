@@ -204,3 +204,4 @@ saved_model/
 
 ingress.yaml
 secret.sh
+secret.json
