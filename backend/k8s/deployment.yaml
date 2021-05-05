@@ -26,6 +26,22 @@ spec:
           ports:
             - containerPort: 8080
               protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /health-check
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 60
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: /health-check
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 60
+            failureThreshold: 10
           env:
             - name: PORT
               value: "8080"
@@ -40,10 +56,10 @@ spec:
           resources:
             limits:
               cpu: 3000m
-              memory: "25000Mi"
+              memory: "26000Mi"
             requests:
               cpu: 3000m
-              memory: "25000Mi"
+              memory: "26000Mi"
           volumeMounts:
             - name: similar-word
               mountPath: /opt/model/

@@ -94,8 +94,8 @@ class SimilarWordPredictor(object):
         return file_path
 
 
-similar_word_predictor = SimilarWordPredictor(
-    model_directory=os.getenv("MODEL_DIRECTORY", "/opt/model/"),
-    language=LANGUAGE_ENUM[os.getenv("LANGUAGE", "ENGLISH").upper()],
-    threshold=float(os.getenv("THRESHOLD", 0.6)),
-)
+# similar_word_predictor = SimilarWordPredictor(
+#     model_directory=os.getenv("MODEL_DIRECTORY", "/opt/model/"),
+#     language=LANGUAGE_ENUM[os.getenv("LANGUAGE", "ENGLISH").upper()],
+#     threshold=float(os.getenv("THRESHOLD", 0.6)),
+# )
