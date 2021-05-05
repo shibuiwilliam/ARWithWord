@@ -47,26 +47,23 @@ spec:
               value: "8080"
             - name: TIMEOUT
               value: "1500"
+            - name: BUCKET_NAME
+              value: similar-word-models
             - name: MODEL_DIRECTORY
-              value: /opt/model/
+              value: /opt/
             - name: LANGUAGE
               value: JAPANESE
+            - name: MODEL_DIMENSION
+              value: "100"
             - name: THRESHOLD
               value: "0.6"
           resources:
             limits:
               cpu: 3000m
-              memory: "26000Mi"
+              memory: "10000Mi"
             requests:
               cpu: 3000m
-              memory: "26000Mi"
-          volumeMounts:
-            - name: similar-word
-              mountPath: /opt/model/
-      volumes:
-        - name: similar-word
-          persistentVolumeClaim:
-            claimName: similar-word
+              memory: "10000Mi"
       restartPolicy: Always
 ---
 apiVersion: v1

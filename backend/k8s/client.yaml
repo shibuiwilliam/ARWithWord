@@ -21,10 +21,3 @@ spec:
         requests:
           cpu: 3000m
           memory: "25000Mi"
-  #     volumeMounts:
-  #       - name: similar-word
-  #         mountPath: /opt/model/
-  # volumes:
-  #   - name: similar-word
-  #     persistentVolumeClaim:
-  #       claimName: similar-word
