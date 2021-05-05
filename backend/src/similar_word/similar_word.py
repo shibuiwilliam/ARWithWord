@@ -84,7 +84,7 @@ class SimilarWordPredictor(object):
         self,
         if_exists: str = "strict",
     ):
-        file_name = f"cc.{self.language.value}.300.bin"
+        file_name = f"cc.{self.language.value}.{self.model_dimension}.bin"
         file_path = os.path.join(self.model_directory, file_name)
         logger.info(f"retrieve model {file_name}")
 
