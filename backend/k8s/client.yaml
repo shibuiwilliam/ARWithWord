@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: client
+  namespace: similar-word
+  annotations:
+    sidecar.istio.io/inject: "true"
+spec:
+  containers:
+    - name: client
+      image: python:3.8-slim
+      imagePullPolicy: Always
+      command:
+        - tail
+        - -f
+        - /dev/null
+      resources:
+        limits:
+          cpu: 3000m
+          memory: "25000Mi"
+        requests:
+          cpu: 3000m
+          memory: "25000Mi"
+  #     volumeMounts:
+  #       - name: similar-word
+  #         mountPath: /opt/model/
+  # volumes:
+  #   - name: similar-word
+  #     persistentVolumeClaim:
+  #       claimName: similar-word
