@@ -203,4 +203,4 @@ saved_model/
 .DS_Store
 
 ingress.yaml
-
+secret.sh

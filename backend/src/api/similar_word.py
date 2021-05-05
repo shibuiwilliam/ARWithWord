@@ -1,8 +1,13 @@
-from fastapi import APIRouter
-from logging import getLogger
+import os
 from typing import List
-from src.constants import LANGUAGE_ENUM
 
+from fastapi import APIRouter, HTTPException, Security
+from fastapi.security.api_key import APIKeyHeader
+from starlette import status
+
+from logging import getLogger
+
+from src.constants import LANGUAGE_ENUM
 from src.similar_word.similar_word import similar_word_predictor
 from src.data.schema import Prediction, PredictionRequest
 
@@ -11,8 +16,25 @@ logger = getLogger(__name__)
 
 router = APIRouter()
 
+api_key_header_auth = APIKeyHeader(
+    name="X-API-KEY",
+    auto_error=True,
+)
 
-@router.post("/", response_model=List[Prediction])
+
+def get_api_key(api_key_header: str = Security(api_key_header_auth)):
+    if api_key_header != os.environ["PASSPHRASE"]:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid API Key",
+        )
+
+
+@router.post(
+    "/",
+    response_model=List[Prediction],
+    dependencies=[Security(get_api_key)],
+)
 def predict(
     prediction_request: PredictionRequest,
 ):
@@ -23,7 +45,11 @@ def predict(
     return predictions
 
 
-@router.get("/sample", response_model=List[Prediction])
+@router.get(
+    "/sample",
+    response_model=List[Prediction],
+    dependencies=[Security(get_api_key)],
+)
 def predict_sample():
     predictions = similar_word_predictor.predict(
         word="ネコ",

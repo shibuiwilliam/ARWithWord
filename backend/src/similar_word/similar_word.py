@@ -103,7 +103,7 @@ class SimilarWordPredictor(object):
 
 
 similar_word_predictor = SimilarWordPredictor(
-    bucket_name=os.getenv("BUCKET_NAME", ""),
+    bucket_name=os.environ["BUCKET_NAME"],
     model_directory=os.getenv("MODEL_DIRECTORY", "/opt/"),
     language=LANGUAGE_ENUM[os.getenv("LANGUAGE", "ENGLISH").upper()],
     model_dimension=int(os.getenv("MODEL_DIMENSION", 100)),
