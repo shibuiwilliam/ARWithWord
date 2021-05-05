@@ -355,6 +355,7 @@
 "Assets/Scripts/Constants.cs"
 "Assets/Scripts/GraphicsWorker.cs"
 "Assets/Scripts/ObjectDetector.cs"
+"Assets/Scripts/SimilarWordClient.cs"
 "Assets/Scripts/SpawnManager.cs"
 "Assets/Scripts/TextureTools.cs"
 "Assets/Scripts/TinyYolo3Detector.cs"
