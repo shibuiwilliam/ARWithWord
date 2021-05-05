@@ -33,20 +33,40 @@ class SimilarWordPredictor(object):
 
         self.threshold = threshold
 
-        self.cache: Dict[str, List[Tuple[float, str]]] = {}
+        self.cache: Dict[str, List[Prediction]] = {}
 
     def predict(
         self,
         word: str,
         topn: int = 20,
-    ) -> List[Tuple[str, float]]:
+    ) -> List[Prediction]:
         logger.info(f"predict {word}")
+
+        if word in self.cache.keys():
+            return self.cache[word]
+
         _predictions = self.fasttext_predictor.wv.most_similar(
             word,
             topn=topn,
         )
-        predictions = [p for p in _predictions if p[1] >= self.threshold and not repr(p[0]).startswith("'\\u")]
+
+        predictions = []
+        for p in _predictions:
+            if p[1] < self.threshold:
+                continue
+            if repr(p[0]).startswith("'\\u"):
+                continue
+            predictions.append(
+                Prediction(
+                    similar_word=p[0],
+                    similarity=p[1],
+                )
+            )
+
+        # predictions = [p for p in _predictions if p[1] >= self.threshold and not repr(p[0]).startswith("'\\u")]
         logger.info(f"{word} prediction: {predictions}")
+
+        self.cache[word] = predictions
 
         return predictions
 
