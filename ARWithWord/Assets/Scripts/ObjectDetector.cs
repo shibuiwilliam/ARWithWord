@@ -11,7 +11,7 @@ public interface ObjectDetector
     }
 
     void Start();
-    IEnumerator Detect(Color32[] picture, Action<IList<ItemInCenter>> callback);
+    IEnumerator Detect(Color32[] picture, Action<IList<ItemDetected>> callback);
 
 }
 
@@ -44,13 +44,13 @@ public class XY
     }
 }
 
-public class ItemInCenter
+public class ItemDetected
 {
-    public XY CenterPoint
-    {
-        get;
-        set;
-    }
+    //public XY CenterPoint
+    //{
+    //    get;
+    //    set;
+    //}
 
     public Prediction PredictedItem
     {

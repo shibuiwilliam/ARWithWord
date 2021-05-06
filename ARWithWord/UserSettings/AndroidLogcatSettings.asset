@@ -1,9 +1,9 @@
 {
     "m_SelectedDeviceId": "09051FDD4004MT",
     "m_SelectedPackage": {
-        "deviceId": "",
-        "name": "",
-        "processId": 0,
+        "deviceId": "09051FDD4004MT",
+        "name": "com.whair.ARWithWord",
+        "processId": 9626,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -43,6 +43,12 @@
             "name": "com.whair.ARWithWord",
             "processId": 8613,
             "exited": true
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 9626,
+            "exited": false
         }
     ],
     "m_Tags": {

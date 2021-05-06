@@ -83,7 +83,7 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
     }
 
 
-    public IEnumerator Detect(Color32[] picture, Action<IList<ItemInCenter>> callback)
+    public IEnumerator Detect(Color32[] picture, Action<IList<ItemDetected>> callback)
     {
         Debug.Log("Run detection");
         using (var tensor = TransformInput(picture, this.IMAGE_SIZE, this.IMAGE_SIZE))
@@ -93,7 +93,7 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
             yield return StartCoroutine(this.worker.StartManualSchedule(inputs));
             var outputL = this.worker.PeekOutput(this.outputNameL);
             var outputM = this.worker.PeekOutput(this.outputNameM);
-            List<ItemInCenter> results = ParseOutputs(outputL, outputM, this.paramsL, this.paramsM);
+            List<ItemDetected> results = ParseOutputs(outputL, outputM, this.paramsL, this.paramsM);
             Debug.Log($"yielded {results.Count()} results");
             callback(results);
         }
@@ -116,9 +116,9 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
         return new Tensor(1, height, width, 3, floatValues);
     }
 
-    private List<ItemInCenter> ParseOutputs(Tensor yoloModelOutputL, Tensor yoloModelOutputM, Parameters parametersL, Parameters parametersM)
+    private List<ItemDetected> ParseOutputs(Tensor yoloModelOutputL, Tensor yoloModelOutputM, Parameters parametersL, Parameters parametersM)
     {
-        var itemsInCenter = new List<ItemInCenter>();
+        var itemsInCenter = new List<ItemDetected>();
 
         for (var box = 0; box < BOXES_PER_CELL; box++)
         {
@@ -150,7 +150,7 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
         return itemsInCenter;
     }
 
-    private ItemInCenter Parse(int cx, int cy, int box, Tensor yoloModelOutput)
+    private ItemDetected Parse(int cx, int cy, int box, Tensor yoloModelOutput)
     {
         var channel = (box * (this.classLength + BOX_INFO_FEATURE_COUNT));
         float confidence = GetConfidence(yoloModelOutput, cx, cy, channel);
@@ -167,20 +167,20 @@ public class TinyYolo3Detector : MonoBehaviour, ObjectDetector
             return null;
         }
 
-        var x = yoloModelOutput[0, cx, cy, channel];
-        var y = yoloModelOutput[0, cx, cy, channel + 1];
-        var width = yoloModelOutput[0, cx, cy, channel + 2];
-        var height = yoloModelOutput[0, cx, cy, channel + 3];
-        var centerX = x + (width / 2f);
-        var centerY = y + (height / 2f);
+        //var x = yoloModelOutput[0, cx, cy, channel];
+        //var y = yoloModelOutput[0, cx, cy, channel + 1];
+        //var width = yoloModelOutput[0, cx, cy, channel + 2];
+        //var height = yoloModelOutput[0, cx, cy, channel + 3];
+        //var centerX = x + (width / 2f);
+        //var centerY = y + (height / 2f);
 
-        var itemInCenter = new ItemInCenter
+        var itemInCenter = new ItemDetected
         {
-            CenterPoint = new XY
-            {
-                X = centerX,
-                Y = centerY,
-            },
+            //CenterPoint = new XY
+            //{
+            //    X = centerX,
+            //    Y = centerY,
+            //},
             PredictedItem = new Prediction
             {
                 Label = labels[topResultIndex],

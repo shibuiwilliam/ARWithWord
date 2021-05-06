@@ -33,7 +33,7 @@ public class Detected
         get;
         set;
     }
-    public IList<ItemInCenter> ItemsInCenter
+    public IList<ItemDetected> ItemsDetected
     {
         get;
         set;
@@ -168,9 +168,9 @@ public class SpawnManager : MonoBehaviour
 
                 var hitPoseRandom = new Vector3(detectedSimilarWord.HitPose.position.x, detectedSimilarWord.HitPose.position.y, detectedSimilarWord.HitPose.position.z);
 
-                float rX = UnityEngine.Random.Range(-3.0f, 3.0f);
-                float rY = UnityEngine.Random.Range(-3.0f, 3.0f);
-                float rZ = UnityEngine.Random.Range(-3.0f, 3.0f);
+                float rX = UnityEngine.Random.Range(-2.0f, 2.0f);
+                float rY = UnityEngine.Random.Range(-2.0f, 2.0f);
+                float rZ = UnityEngine.Random.Range(-2.0f, 2.0f);
                 hitPoseRandom.x += rX;
                 hitPoseRandom.y += rY;
                 hitPoseRandom.z += rZ;
@@ -271,7 +271,7 @@ public class SpawnManager : MonoBehaviour
         var detected = this.detectedQueue.Dequeue();
         StartCoroutine(
             this.similarWordClient.SimilarWordAPI(
-                detected.ItemsInCenter[0].PredictedItem.Label, 20, results =>
+                detected.ItemsDetected[0].PredictedItem.Label, 20, results =>
                 {
                     Debug.Log($"result {results}");
                     var detectedSimilarWords = new DetectedSimilarWords
@@ -304,14 +304,14 @@ public class SpawnManager : MonoBehaviour
                 {
                     StartCoroutine(
                         this.objectDetector.Detect(
-                            picture, itemsInCenter =>
+                            picture, itemsDetected =>
                             {
-                                if (itemsInCenter.Count > 0)
+                                if (itemsDetected.Count > 0)
                                 {
                                     var detected = new Detected
                                     {
                                         HitPose = detectionTarget.HitPose,
-                                        ItemsInCenter = itemsInCenter,
+                                        ItemsDetected = itemsDetected,
                                     };
                                     this.detectedQueue.Enqueue(detected);
                                 }
