@@ -7,7 +7,7 @@ from starlette import status
 
 from logging import getLogger
 
-from src.constants import LANGUAGE_ENUM
+from src.constants import POSTFIX
 from src.similar_word.similar_word import similar_word_predictor
 from src.data.schema import Predictions, PredictionRequest
 
@@ -46,7 +46,7 @@ def predict(
 
 
 @router.get(
-    "/sample",
+    "/sample/",
     response_model=Predictions,
     dependencies=[Security(get_api_key)],
 )

@@ -76,7 +76,10 @@ class SimilarWordPredictor(object):
 
         # predictions = [p for p in _predictions if p[1] >= self.threshold and not repr(p[0]).startswith("'\\u")]
         logger.info(f"{word} prediction: {_predictions}")
-        predictions = Predictions(predictions=_predictions)
+        predictions = Predictions(
+            word=word,
+            predictions=_predictions,
+        )
 
         self.cache[key] = predictions
 

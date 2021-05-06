@@ -59,16 +59,17 @@ public class SimilarWord
 }
 
 [Serializable]
-public class Predictions
+public class SimilarWords
 {
+    public string word;
     public SimilarWord[] predictions;
 
-    public static Predictions Deserialize(string json)
+    public static SimilarWords Deserialize(string json)
     {
-        Predictions model = JsonUtility.FromJson<Predictions>(json);
+        SimilarWords model = JsonUtility.FromJson<SimilarWords>(json);
         return model;
     }
-    public static string Serialize(Predictions model)
+    public static string Serialize(SimilarWords model)
     {
         string json = JsonUtility.ToJson(model);
         return json;
@@ -82,13 +83,13 @@ public class SimilarWordClient : MonoBehaviour
     private string secretString;
     private SecretJson secretJson;
 
-    void Start()
+    public void Start()
     {
         this.secretString = Resources.Load<TextAsset>(this.secretFile.name).ToString();
         this.secretJson = SecretJson.Deserialize(this.secretString);
     }
 
-    IEnumerator SimilarWordAPI(string word, int topn)
+    public IEnumerator SimilarWordAPI(string word, int topn, Action<SimilarWords> callback)
     {
         using (var request = new UnityWebRequest(secretJson.url, "POST"))
         {
@@ -104,10 +105,30 @@ public class SimilarWordClient : MonoBehaviour
             request.SetRequestHeader("Content-Type", "application/json");
             request.SetRequestHeader("X-API-KEY", secretJson.secret);
             yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                Debug.Log($"status code [{request.responseCode}]");
+                if (request.responseCode==200)
+                {
+                    Debug.Log("POST request succeeded");
+                    string json = request.downloadHandler.text;
+                    SimilarWords similarWords = SimilarWords.Deserialize(json);
+                    callback(similarWords);
+                }
+                else
+                {
+                    Debug.Log("POST request failed");
+                }
+            }
         }
     }
 
-    private void Update()
+    public void Update()
     {
         
     }

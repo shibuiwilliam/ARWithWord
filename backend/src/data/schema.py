@@ -13,4 +13,5 @@ class Prediction(BaseModel):
 
 
 class Predictions(BaseModel):
+    word: str
     predictions: List[Prediction]

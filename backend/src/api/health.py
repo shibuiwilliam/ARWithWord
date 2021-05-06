@@ -1,8 +1,14 @@
 from fastapi import APIRouter
+from src.constants import POSTFIX
 
 router = APIRouter()
 
 
-@router.get("/")
+@router.get(f"/{POSTFIX}")
 def health():
-    return {"health": "ok"}
+    return {"health": f"ok_{POSTFIX}"}
+
+
+@router.get("/")
+def root_health():
+    return {"health": f"ok_{POSTFIX}"}

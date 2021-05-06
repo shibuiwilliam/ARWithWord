@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: similar-word-en
+  namespace: similar-word
+  labels:
+    app: similar-word-en
+spec:
+  selector:
+    matchLabels:
+      app: similar-word-en
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+  template:
+    metadata:
+      labels:
+        app: similar-word-en
+    spec:
+      containers:
+        - name: similar-word-en
+          image: shibui/similar_word_api:0.0.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 300
+            periodSeconds: 20
+            timeoutSeconds: 10
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 300
+            periodSeconds: 20
+            timeoutSeconds: 10
+            failureThreshold: 20
+          env:
+            - name: PORT
+              value: "8080"
+            - name: TIMEOUT
+              value: "600"
+            - name: BUCKET_NAME
+              value: similar-word-models
+            - name: MODEL_DIRECTORY
+              value: /opt/
+            - name: LANGUAGE
+              value: ENGLISH
+            - name: MODEL_DIMENSION
+              value: "100"
+            - name: THRESHOLD
+              value: "0.6"
+            - name: PASSPHRASE
+              valueFrom:
+                secretKeyRef:
+                  name: dev-secret
+                  key: passphrase
+          resources:
+            limits:
+              cpu: 2000m
+              memory: "6000Mi"
+            requests:
+              cpu: 1500m
+              memory: "4500Mi"
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: similar-word-en
+  namespace: similar-word
+  labels:
+    app: similar-word-en
+spec:
+  selector:
+    app: similar-word-en
+  ports:
+    - name: similar-word-en
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+  type: NodePort
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: in-similar-word-en
+  namespace: similar-word
+  labels:
+    app: similar-word-en
+spec:
+  selector:
+    app: similar-word-en
+  ports:
+    - name: in-similar-word-en
+      port: 8080
+      protocol: TCP
+      targetPort: 8080

@@ -5,6 +5,7 @@ from src.api import (
     health,
     similar_word,
 )
+from src.constants import POSTFIX
 
 logger = getLogger(__name__)
 
@@ -16,4 +17,4 @@ app = FastAPI(
 )
 
 app.include_router(health.router, prefix="", tags=["health"])
-app.include_router(similar_word.router, prefix="/similar-word", tags=["similar_word"])
+app.include_router(similar_word.router, prefix=f"/{POSTFIX}/similar-word", tags=["similar_word"])

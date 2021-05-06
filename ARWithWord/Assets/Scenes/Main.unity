@@ -460,6 +460,7 @@ MonoBehaviour:
   goText: {fileID: 474562726361190053, guid: 1cf097eb0778643e1a9d0ba3f8692732, type: 3}
   m_arCameraManager: {fileID: 2004849048}
   m_goObjectDetector: {fileID: 407443939}
+  m_goSimilarWordClient: {fileID: 1201532517}
   shiftX: 0
   shiftY: 0
   scaleFactor: 1

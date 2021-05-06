@@ -59,8 +59,17 @@ public class SpawnManager : MonoBehaviour
         get { return m_goObjectDetector; }
         set { m_goObjectDetector = value; }
     }
-
     private ObjectDetector objectDetector;
+
+
+    [SerializeField]
+    GameObject m_goSimilarWordClient;
+    public GameObject goSimilarWordClient
+    {
+        get { return m_goSimilarWordClient; }
+        set { m_goSimilarWordClient = value; }
+    }
+    private SimilarWordClient similarWordClient;
 
     public float shiftX = 0f;
     public float shiftY = 0f;
@@ -77,8 +86,7 @@ public class SpawnManager : MonoBehaviour
 
     Queue<DetectionTarget> detectionTargetQueue = new Queue<DetectionTarget>();
     Queue<Detected> detectedQueue = new Queue<Detected>();
-
-    private List<string> tmpList = new List<string>() { "a", "bb", "ccc", "dddd", "eeeeee" };
+    Queue<SimilarWords> similarWordsQueue = new Queue<SimilarWords>();
 
     private List<Color32> colors = new List<Color32>() {
         new Color32(255, 115, 200, 255),
@@ -104,6 +112,9 @@ public class SpawnManager : MonoBehaviour
 
         this.objectDetector = goObjectDetector.GetComponent<TinyYolo3Detector>();
         this.objectDetector.Start();
+
+        this.similarWordClient = goSimilarWordClient.GetComponent<SimilarWordClient>();
+        this.similarWordClient.Start();
 
         CalculateShift();
     }
@@ -197,6 +208,7 @@ public class SpawnManager : MonoBehaviour
         buffer.Dispose();
 
         Detect();
+        RequestSimilarWord();
     }
 
 
@@ -228,6 +240,23 @@ public class SpawnManager : MonoBehaviour
         }
 
         this.scaleFactor = smallest / (float)this.objectDetector.IMAGE_SIZE;
+    }
+
+    private void RequestSimilarWord()
+    {
+        if (this.detectedQueue.Count()==0)
+        {
+            return;
+        }
+        var detected = this.detectedQueue.Dequeue();
+        StartCoroutine(
+            this.similarWordClient.SimilarWordAPI(
+                detected.ItemsInCenter[0].PredictedItem.Label, 20, results =>
+                {
+                    this.similarWordsQueue.Enqueue(results);
+                }
+            )
+        );
     }
 
     private void Detect()
