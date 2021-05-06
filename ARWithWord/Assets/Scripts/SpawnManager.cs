@@ -176,6 +176,8 @@ public class SpawnManager : MonoBehaviour
                 }
             }
         }
+
+        RequestSimilarWord();
     }
 
     unsafe void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
@@ -208,7 +210,6 @@ public class SpawnManager : MonoBehaviour
         buffer.Dispose();
 
         Detect();
-        RequestSimilarWord();
     }
 
 
@@ -248,6 +249,7 @@ public class SpawnManager : MonoBehaviour
         {
             return;
         }
+
         var detected = this.detectedQueue.Dequeue();
         StartCoroutine(
             this.similarWordClient.SimilarWordAPI(

@@ -82,17 +82,20 @@ public class SimilarWordClient : MonoBehaviour
     public TextAsset secretFile;
     private string secretString;
     private SecretJson secretJson;
+    private string similarWordUrl;
 
     public void Start()
     {
         this.secretString = Resources.Load<TextAsset>(this.secretFile.name).ToString();
         this.secretJson = SecretJson.Deserialize(this.secretString);
+        this.similarWordUrl = $"{this.secretJson.url}/similar-word/";
     }
 
     public IEnumerator SimilarWordAPI(string word, int topn, Action<SimilarWords> callback)
     {
-        using (var request = new UnityWebRequest(secretJson.url, "POST"))
+        using (var request = new UnityWebRequest(this.similarWordUrl, "POST"))
         {
+            Debug.Log($"Request {word} for {topn}");
             PostData postData = new PostData();
             postData.word = word;
             postData.topn = topn;
@@ -103,11 +106,12 @@ public class SimilarWordClient : MonoBehaviour
             request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
             request.SetRequestHeader("accept", "application/json");
             request.SetRequestHeader("Content-Type", "application/json");
-            request.SetRequestHeader("X-API-KEY", secretJson.secret);
+            request.SetRequestHeader("X-API-KEY", this.secretJson.secret);
             yield return request.SendWebRequest();
 
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
             {
+                Debug.Log("Error POST request");
                 Debug.Log(request.error);
             }
             else
