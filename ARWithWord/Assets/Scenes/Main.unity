@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   modelFile: {fileID: 5022602860645237092, guid: 02347e180a6da4cd9b8499725035e87b, type: 3}
-  labelLanguage: 1
+  labelLanguage: 0
   inputName: 000_net
   outputNameL: 016_convolutional
   outputNameM: 023_convolutional
@@ -380,7 +380,6 @@ GameObject:
   - component: {fileID: 1852839655}
   - component: {fileID: 1852839657}
   - component: {fileID: 1852839661}
-  - component: {fileID: 1852839660}
   - component: {fileID: 1852839658}
   - component: {fileID: 1852839659}
   m_Layer: 0
@@ -464,19 +463,6 @@ MonoBehaviour:
   shiftX: 0
   shiftY: 0
   scaleFactor: 1
---- !u!114 &1852839660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1852839654}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ab0e80cee9cc1d44928bfe488dd1e2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PointCloudPrefab: {fileID: 1149480747387147044, guid: 8e6e5908a4978488fb0ca11d0c7cc3c6, type: 3}
 --- !u!114 &1852839661
 MonoBehaviour:
   m_ObjectHideFlags: 0

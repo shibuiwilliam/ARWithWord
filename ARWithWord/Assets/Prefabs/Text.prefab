@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4142397737037739179}
   - component: {fileID: -6366834996981638297}
   - component: {fileID: -7460960696320741676}
+  - component: {fileID: 3248488023868149240}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -84,15 +85,27 @@ TextMesh:
   m_GameObject: {fileID: 474562726361190053}
   m_Text: ABCDEFG
   m_OffsetZ: 0
-  m_CharacterSize: 12
+  m_CharacterSize: 10
   m_LineSpacing: 1
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 1
-  m_FontSize: 24
+  m_FontSize: 28
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   m_Color:
     serializedVersion: 2
     rgba: 4291326975
+--- !u!114 &3248488023868149240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474562726361190053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22051682c57eb4a23ad8626ae110ef2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -3,6 +3,7 @@ ScriptsOnlyBuild:
     Assembly-CSharp.dll:
     - SimilarWordClient
     - SpawnManager
+    - TextController
     - TinyYolo3Detector
     Unity.Barracuda.dll:
     - Unity.Barracuda.NNModel
@@ -24,9 +25,6 @@ ScriptsOnlyBuild:
     - UnityEngine.XR.ARFoundation.ARPlane
     - UnityEngine.XR.ARFoundation.ARPlaneManager
     - UnityEngine.XR.ARFoundation.ARPlaneMeshVisualizer
-    - UnityEngine.XR.ARFoundation.ARPointCloud
-    - UnityEngine.XR.ARFoundation.ARPointCloudManager
-    - UnityEngine.XR.ARFoundation.ARPointCloudParticleVisualizer
     - UnityEngine.XR.ARFoundation.ARRaycastManager
     - UnityEngine.XR.ARFoundation.ARSession
     - UnityEngine.XR.ARFoundation.ARSessionOrigin
@@ -90,13 +88,9 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12400}
     - Class: 114
-      Script: {instanceID: 12894}
-    - Class: 114
       Script: {instanceID: 13888}
     - Class: 114
       Script: {instanceID: 14486}
-    - Class: 114
-      Script: {instanceID: 15098}
     - Class: 114
       Script: {instanceID: 15310}
     - Class: 114
@@ -108,13 +102,13 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 16702}
     - Class: 114
-      Script: {instanceID: 16794}
-    - Class: 114
       Script: {instanceID: 16910}
     - Class: 114
       Script: {instanceID: 32882}
     - Class: 114
       Script: {instanceID: 33850}
+    - Class: 114
+      Script: {instanceID: 38318}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 120
@@ -124,10 +118,6 @@ ScriptsOnlyBuild:
     - Class: 157
       Script: {instanceID: 0}
     - Class: 196
-      Script: {instanceID: 0}
-    - Class: 198
-      Script: {instanceID: 0}
-    - Class: 199
       Script: {instanceID: 0}
   scriptHashData:
   - hash:
@@ -1222,6 +1212,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SimilarWordClient
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TextController
   platform: 13
   scenePathNames:
   - Assets/Scenes/Main.unity

@@ -168,9 +168,9 @@ public class SpawnManager : MonoBehaviour
 
                 var hitPoseRandom = new Vector3(detectedSimilarWord.HitPose.position.x, detectedSimilarWord.HitPose.position.y, detectedSimilarWord.HitPose.position.z);
 
-                float rX = UnityEngine.Random.Range(-2.0f, 2.0f);
-                float rY = UnityEngine.Random.Range(-2.0f, 2.0f);
-                float rZ = UnityEngine.Random.Range(-2.0f, 2.0f);
+                float rX = UnityEngine.Random.Range(-1.0f, 1.0f);
+                float rY = UnityEngine.Random.Range(-1.0f, 1.0f);
+                float rZ = UnityEngine.Random.Range(-1.0f, 1.0f);
                 hitPoseRandom.x += rX;
                 hitPoseRandom.y += rY;
                 hitPoseRandom.z += rZ;

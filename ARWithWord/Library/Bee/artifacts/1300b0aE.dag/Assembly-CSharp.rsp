@@ -358,6 +358,7 @@
 "Assets/Scripts/ObjectDetector.cs"
 "Assets/Scripts/SimilarWordClient.cs"
 "Assets/Scripts/SpawnManager.cs"
+"Assets/Scripts/TextController.cs"
 "Assets/Scripts/TextureTools.cs"
 "Assets/Scripts/TinyYolo3Detector.cs"
 -langversion:8.0

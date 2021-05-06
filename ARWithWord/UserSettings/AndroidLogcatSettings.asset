@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "09051FDD4004MT",
         "name": "com.whair.ARWithWord",
-        "processId": 9626,
+        "processId": 22533,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -48,6 +48,42 @@
             "deviceId": "09051FDD4004MT",
             "name": "com.whair.ARWithWord",
             "processId": 9626,
+            "exited": false
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 11451,
+            "exited": false
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 12128,
+            "exited": false
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 12660,
+            "exited": false
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 20083,
+            "exited": false
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 21821,
+            "exited": false
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 22533,
             "exited": false
         }
     ],
