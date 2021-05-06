@@ -14,7 +14,8 @@ app = FastAPI(
     title="similar_word_api",
     description="similar word api",
     version="0.0.1",
+    root_path=f"/{POSTFIX}",
 )
 
 app.include_router(health.router, prefix="", tags=["health"])
-app.include_router(similar_word.router, prefix=f"/{POSTFIX}/similar-word", tags=["similar_word"])
+app.include_router(similar_word.router, prefix=f"/similar-word", tags=["similar_word"])
