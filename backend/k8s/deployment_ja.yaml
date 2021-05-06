@@ -28,7 +28,7 @@ spec:
               protocol: TCP
           readinessProbe:
             httpGet:
-              path: /ja/
+              path: /
               port: 8080
             initialDelaySeconds: 300
             periodSeconds: 20
@@ -36,7 +36,7 @@ spec:
             failureThreshold: 10
           livenessProbe:
             httpGet:
-              path: /ja/
+              path: /
               port: 8080
             initialDelaySeconds: 300
             periodSeconds: 20
