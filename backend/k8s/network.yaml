@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: similar-word
+  namespace: similar-word
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: <your reserved GCP IP address>
+    networking.gke.io/managed-certificates: similar-word
+spec:
+  backend:
+    serviceName: similar-word-en
+    servicePort: 80
+
+---
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: similar-word
+  namespace: similar-word
+spec:
+  domains:
+    - <your similar word api url>
