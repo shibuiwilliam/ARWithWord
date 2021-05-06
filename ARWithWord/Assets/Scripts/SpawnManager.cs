@@ -40,6 +40,20 @@ public class Detected
     }
 }
 
+public class DetectedSimilarWords
+{
+    public Pose HitPose
+    {
+        get;
+        set;
+    }
+    public SimilarWords SimilarWords
+    {
+        get;
+        set;
+    }
+}
+
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField] GameObject goText;
@@ -86,7 +100,7 @@ public class SpawnManager : MonoBehaviour
 
     Queue<DetectionTarget> detectionTargetQueue = new Queue<DetectionTarget>();
     Queue<Detected> detectedQueue = new Queue<Detected>();
-    Queue<SimilarWords> similarWordsQueue = new Queue<SimilarWords>();
+    Queue<DetectedSimilarWords> detectedSimilarWordsQueue = new Queue<DetectedSimilarWords>();
 
     private List<Color32> colors = new List<Color32>() {
         new Color32(255, 115, 200, 255),
@@ -140,44 +154,49 @@ public class SpawnManager : MonoBehaviour
             }
         }
 
-        if (this.detectedQueue.Count() > 0)
+        if (this.detectedSimilarWordsQueue.Count() > 0)
         {
-            var detected = this.detectedQueue.Dequeue();
-            if (detected.ItemsInCenter.Count > 0)
+            var detectedSimilarWord = this.detectedSimilarWordsQueue.Dequeue();
+            Debug.Log($"similar word for {detectedSimilarWord.SimilarWords.word} has {detectedSimilarWord.SimilarWords.predictions.Count()} predictions");
+
+            AllocateItem(detectedSimilarWord.SimilarWords.word, detectedSimilarWord.HitPose.position, detectedSimilarWord.HitPose.rotation);
+
+            int i = 0;
+            foreach (var prediction in detectedSimilarWord.SimilarWords.predictions)
             {
-                Debug.Log($"Detected results: {detected.ItemsInCenter.Count()}");
-                int i = 0;
-                foreach (var itemInCenter in detected.ItemsInCenter)
+                Debug.Log($"{i} process {prediction.similar_word} with {prediction.similarity}");
+
+                var hitPoseRandom = new Vector3(detectedSimilarWord.HitPose.position.x, detectedSimilarWord.HitPose.position.y, detectedSimilarWord.HitPose.position.z);
+                if (i != 0)
                 {
-                    Debug.Log($"{i} detected {itemInCenter} in {itemInCenter.CenterPoint.X} : {itemInCenter.CenterPoint.Y}");
-
-                    this.goText.GetComponent<TextMesh>().text = itemInCenter.PredictedItem.Label;
-
-                    int colorIndex = UnityEngine.Random.Range(0, colors.Count());
-                    this.goText.GetComponent<TextMesh>().color = this.colors[colorIndex];
-
-                    int characterSize = UnityEngine.Random.Range(6, 18);
-                    this.goText.GetComponent<TextMesh>().characterSize = characterSize;
-                    Debug.Log($"allocate detected item {itemInCenter.PredictedItem.Label}");
-
-                    var hitPoseRandom = new Vector3(detected.HitPose.position.x, detected.HitPose.position.y, detected.HitPose.position.z);
-                    if (i != 0)
-                    {
-                        float rX = UnityEngine.Random.Range(-3.0f, 3.0f);
-                        float rY = UnityEngine.Random.Range(-3.0f, 3.0f);
-                        float rZ = UnityEngine.Random.Range(-3.0f, 3.0f);
-                        hitPoseRandom.x += rX;
-                        hitPoseRandom.y += rY;
-                        hitPoseRandom.z += rZ;
-                    }
-
-                    Instantiate(goText, hitPoseRandom, detected.HitPose.rotation);
-                    Debug.Log($"allocated {itemInCenter.PredictedItem.Label} on {hitPoseRandom.x}, {hitPoseRandom.y}, {hitPoseRandom.z}");
+                    float rX = UnityEngine.Random.Range(-3.0f, 3.0f);
+                    float rY = UnityEngine.Random.Range(-3.0f, 3.0f);
+                    float rZ = UnityEngine.Random.Range(-3.0f, 3.0f);
+                    hitPoseRandom.x += rX;
+                    hitPoseRandom.y += rY;
+                    hitPoseRandom.z += rZ;
                 }
+                AllocateItem(detectedSimilarWord.SimilarWords.word, hitPoseRandom, detectedSimilarWord.HitPose.rotation);
             }
         }
 
         RequestSimilarWord();
+    }
+
+
+    private void AllocateItem(string word, Vector3 hitPose, Quaternion hitRotation)
+    {
+        Debug.Log($"allocate {word}");
+
+        this.goText.GetComponent<TextMesh>().text = word;
+        int colorIndex = UnityEngine.Random.Range(0, colors.Count());
+        this.goText.GetComponent<TextMesh>().color = this.colors[colorIndex];
+
+        int characterSize = UnityEngine.Random.Range(6, 18);
+        this.goText.GetComponent<TextMesh>().characterSize = characterSize;
+
+        Instantiate(goText, hitPose, hitRotation);
+        Debug.Log($"allocated {word} on {hitPose.x}, {hitPose.y}, {hitPose.z}");
     }
 
     unsafe void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
@@ -255,7 +274,13 @@ public class SpawnManager : MonoBehaviour
             this.similarWordClient.SimilarWordAPI(
                 detected.ItemsInCenter[0].PredictedItem.Label, 20, results =>
                 {
-                    this.similarWordsQueue.Enqueue(results);
+                    Debug.Log($"result {results}");
+                    var detectedSimilarWords = new DetectedSimilarWords
+                    {
+                        HitPose = detected.HitPose,
+                        SimilarWords=results,
+                    };
+                    this.detectedSimilarWordsQueue.Enqueue(detectedSimilarWords);
                 }
             )
         );

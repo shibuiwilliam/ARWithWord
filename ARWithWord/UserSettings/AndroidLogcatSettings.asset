@@ -3,17 +3,11 @@
     "m_SelectedPackage": {
         "deviceId": "09051FDD4004MT",
         "name": "com.whair.ARWithWord",
-        "processId": 2241,
+        "processId": 4502,
         "exited": false
     },
     "m_SelectedPriority": 0,
     "m_KnownPackagesForSerialization": [
-        {
-            "deviceId": "09051FDD4004MT",
-            "name": "com.whair.ARWithWord",
-            "processId": 11795,
-            "exited": true
-        },
         {
             "deviceId": "09051FDD4004MT",
             "name": "com.whair.ARWithWord",
@@ -48,6 +42,12 @@
             "deviceId": "09051FDD4004MT",
             "name": "com.whair.ARWithWord",
             "processId": 2241,
+            "exited": true
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 4502,
             "exited": false
         }
     ],
