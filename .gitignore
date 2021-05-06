@@ -203,9 +203,6 @@ dmypy.json
 .pyre/
 
 .vscode/*
-postgres/*
-sample_data/*.csv
-sample_data/files/*
 
 secrets/*.sh
 saved_model/
