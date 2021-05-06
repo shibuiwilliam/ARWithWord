@@ -1,0 +1,127 @@
+{
+  "Nodes": [
+    {
+      "Annotation": "all_tundra_nodes",
+      "Action": "",
+      "Inputs": [],
+      "Outputs": [],
+      "TargetDirectories": [],
+      "PassIndex": 0,
+      "ToBuildDependencies": [
+        1
+      ],
+      "ToUseDependencies": [],
+      "OverwriteOutputs": true,
+      "FrontendResponseFiles": [],
+      "AllowUnexpectedOutput": true,
+      "AllowedOutputSubstrings": [],
+      "DebugActionIndex": 0
+    },
+    {
+      "Annotation": "Il2Cpp /Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Library/Il2cppBuildCache/Android/armeabi-v7a/Native/armeabi-v7a/libil2cpp.so",
+      "Action": "\"/Applications/2021.1.5f1/Unity.app/Contents/il2cpp/build/deploy/netcoreapp3.1/il2cpp\" --convert-to-cpp --emit-null-checks --enable-array-bounds-check --dotnetprofile=\"unityaot\" --compile-cpp --libil2cpp-static --platform=\"Android\" --architecture=\"ARMv7\" --configuration=\"Release\" --outputpath=\"/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Library/Il2cppBuildCache/Android/armeabi-v7a/Native/armeabi-v7a/libil2cpp.so\" --cachedirectory=\"/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Assets/../Library/il2cpp_android_armeabi-v7a/il2cpp_cache\" --additional-include-directories=\"/Applications/2021.1.5f1/PlaybackEngines/AndroidPlayer/Tools/bdwgc/include\" --additional-include-directories=\"/Applications/2021.1.5f1/PlaybackEngines/AndroidPlayer/Tools/libil2cpp/include\" --baselib-directory=\"/Applications/2021.1.5f1/PlaybackEngines/AndroidPlayer/Variations/il2cpp/Release/StaticLibs/armeabi-v7a\" --avoid-dynamic-library-copy --tool-chain-path=\"/Applications/2021.1.5f1/PlaybackEngines/AndroidPlayer/NDK\" --incremental-g-c-time-slice=3 --profiler-report --map-file-parser=\"/Applications/2021.1.5f1/Unity.app/Contents/Tools/MapFileParser/MapFileParser\" --directory=\"/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed\" --generatedcppdir=\"/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Library/Il2cppBuildCache/Android/armeabi-v7a/il2cppOutput\"",
+      "Inputs": [
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/Assembly-CSharp.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/Mono.Security.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/System.Configuration.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/System.Core.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/System.Xml.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/System.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/Unity.Barracuda.BurstBLAS.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/Unity.Barracuda.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/Unity.Burst.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/Unity.XR.ARCore.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/Unity.XR.ARFoundation.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/Unity.XR.ARSubsystems.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/Unity.XR.Management.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.ARModule.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.AndroidJNIModule.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.AudioModule.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.CoreModule.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.ImageConversionModule.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.InputLegacyModule.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.InputModule.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.JSONSerializeModule.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.ParticleSystemModule.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.PhysicsModule.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.SharedInternalsModule.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.SpatialTracking.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.SubsystemsModule.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.TextRenderingModule.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.UnityWebRequestModule.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.XRModule.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/UnityEngine.dll",
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Temp/StagingArea/assets/bin/Data/Managed/mscorlib.dll"
+      ],
+      "Outputs": [
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Library/Il2cppBuildCache/Android/armeabi-v7a/Native/armeabi-v7a/libil2cpp.so"
+      ],
+      "TargetDirectories": [
+        "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Library/Il2cppBuildCache/Android/armeabi-v7a/il2cppOutput"
+      ],
+      "PassIndex": 0,
+      "ToBuildDependencies": [],
+      "ToUseDependencies": [],
+      "OverwriteOutputs": false,
+      "FrontendResponseFiles": [],
+      "AllowUnexpectedOutput": true,
+      "AllowedOutputSubstrings": [],
+      "DebugActionIndex": 1
+    }
+  ],
+  "FileSignatures": [
+    {
+      "File": "../../../../../../../Library"
+    },
+    {
+      "File": "../../../../Temp/StagingArea/assets/bin/Data/Managed"
+    },
+    {
+      "File": "artifacts/buildprogram/tundra_buildprogram.dag.json"
+    },
+    {
+      "File": "il2cpp_settings.json"
+    },
+    {
+      "File": "unitylinker_settings.json"
+    }
+  ],
+  "GlobSignatures": [
+    {
+      "Path": "../../../../Temp/StagingArea/assets/bin/Data/Managed"
+    }
+  ],
+  "ContentDigestExtensions": [
+    ".rsp",
+    ".dll",
+    ".exe",
+    ".txt",
+    ".c",
+    ".cpp",
+    ".h",
+    ".cs",
+    ".hpp"
+  ],
+  "StructuredLogFileName": "artifacts/tundra.log.json",
+  "StateFileName": "artifacts/TundraBuildState.state",
+  "StateFileNameTmp": "artifacts/TundraBuildState.state.tmp",
+  "ScanCacheFileName": "artifacts/tundra.scancache",
+  "ScanCacheFileNameTmp": "artifacts/tundra.scancache.tmp",
+  "DigestCacheFileName": "artifacts/tundra.digestcache",
+  "DigestCacheFileNameTmp": "artifacts/tundra.digestcache.tmp",
+  "DirectoriesCausingImplicitDependencies": [
+    "/Users/shibuiyuusuke/Unity/ARWithWord/ARWithWord/Library/Il2cppBuildCache/Android/armeabi-v7a/il2cppOutput"
+  ],
+        "NamedNodes": {
+          "all_tundra_nodes": 0
+        }
+,  "DefaultNodes": [
+    0
+  ],
+  "SharedResources": [],
+  "Scanners": [],
+  "Identifier": "artifacts/tundra.dag.json",
+  "BuildTitle": "Bee",
+  "RelativePathToRoot": ".."
+}
