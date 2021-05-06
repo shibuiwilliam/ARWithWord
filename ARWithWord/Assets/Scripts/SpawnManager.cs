@@ -176,7 +176,7 @@ public class SpawnManager : MonoBehaviour
                     hitPoseRandom.y += rY;
                     hitPoseRandom.z += rZ;
                 }
-                AllocateItem(detectedSimilarWord.SimilarWords.word, hitPoseRandom, detectedSimilarWord.HitPose.rotation);
+                AllocateItem(prediction.similar_word, hitPoseRandom, detectedSimilarWord.HitPose.rotation);
             }
         }
 

@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "09051FDD4004MT",
         "name": "com.whair.ARWithWord",
-        "processId": 4502,
+        "processId": 8613,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -48,6 +48,12 @@
             "deviceId": "09051FDD4004MT",
             "name": "com.whair.ARWithWord",
             "processId": 4502,
+            "exited": false
+        },
+        {
+            "deviceId": "09051FDD4004MT",
+            "name": "com.whair.ARWithWord",
+            "processId": 8613,
             "exited": false
         }
     ],
