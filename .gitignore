@@ -215,6 +215,6 @@ ingress.yaml
 secret.sh
 secret.json
 
-UserSettings/*
-Temp/*
-obj/Debug/*
+UserSettings
+Temp
+obj/Debug
