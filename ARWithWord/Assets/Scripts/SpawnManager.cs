@@ -167,15 +167,14 @@ public class SpawnManager : MonoBehaviour
                 Debug.Log($"{i} process {prediction.similar_word} with {prediction.similarity}");
 
                 var hitPoseRandom = new Vector3(detectedSimilarWord.HitPose.position.x, detectedSimilarWord.HitPose.position.y, detectedSimilarWord.HitPose.position.z);
-                if (i != 0)
-                {
-                    float rX = UnityEngine.Random.Range(-3.0f, 3.0f);
-                    float rY = UnityEngine.Random.Range(-3.0f, 3.0f);
-                    float rZ = UnityEngine.Random.Range(-3.0f, 3.0f);
-                    hitPoseRandom.x += rX;
-                    hitPoseRandom.y += rY;
-                    hitPoseRandom.z += rZ;
-                }
+
+                float rX = UnityEngine.Random.Range(-3.0f, 3.0f);
+                float rY = UnityEngine.Random.Range(-3.0f, 3.0f);
+                float rZ = UnityEngine.Random.Range(-3.0f, 3.0f);
+                hitPoseRandom.x += rX;
+                hitPoseRandom.y += rY;
+                hitPoseRandom.z += rZ;
+                
                 AllocateItem(prediction.similar_word, hitPoseRandom, detectedSimilarWord.HitPose.rotation);
             }
         }

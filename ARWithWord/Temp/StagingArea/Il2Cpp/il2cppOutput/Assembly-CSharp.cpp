@@ -10560,7 +10560,7 @@ IL_00b2:
 		L_34 = Enumerable_Count_TisDetectedSimilarWords_t353FC54FEDF384B3E0059F4CF95DC9BEEFA09630_mECC3AF28FBF3035D4453C29AFBCE6329337F7D8A(L_33, /*hidden argument*/Enumerable_Count_TisDetectedSimilarWords_t353FC54FEDF384B3E0059F4CF95DC9BEEFA09630_mECC3AF28FBF3035D4453C29AFBCE6329337F7D8A_RuntimeMethod_var);
 		if ((((int32_t)L_34) <= ((int32_t)0)))
 		{
-			goto IL_023d;
+			goto IL_0234;
 		}
 	}
 	{
@@ -10620,7 +10620,7 @@ IL_00b2:
 		SimilarWordU5BU5D_t3D7F79E4A84B915D772E71A3C12299983728928A* L_58 = L_57->get_predictions_1();
 		V_6 = L_58;
 		V_7 = 0;
-		goto IL_0232;
+		goto IL_0229;
 	}
 
 IL_0144:
@@ -10668,79 +10668,64 @@ IL_0144:
 		Vector3_t65B972D6A585A0A5B63153CF1177A90D3C90D65E  L_83 = L_82.get_position_0();
 		float L_84 = L_83.get_z_4();
 		Vector3__ctor_m57495F692C6CE1CEF278CAD9A98221165D37E636_inline((Vector3_t65B972D6A585A0A5B63153CF1177A90D3C90D65E *)(&V_9), L_76, L_80, L_84, /*hidden argument*/NULL);
-		// if (i != 0)
-		int32_t L_85 = V_5;
-		if (!L_85)
-		{
-			goto IL_020c;
-		}
-	}
-	{
 		// float rX = UnityEngine.Random.Range(-3.0f, 3.0f);
+		float L_85;
+		L_85 = Random_Range_mC15372D42A9ABDCAC3DE82E114D60A40C9C311D2((-3.0f), (3.0f), /*hidden argument*/NULL);
+		V_10 = L_85;
+		// float rY = UnityEngine.Random.Range(-3.0f, 3.0f);
 		float L_86;
 		L_86 = Random_Range_mC15372D42A9ABDCAC3DE82E114D60A40C9C311D2((-3.0f), (3.0f), /*hidden argument*/NULL);
-		V_10 = L_86;
-		// float rY = UnityEngine.Random.Range(-3.0f, 3.0f);
+		V_11 = L_86;
+		// float rZ = UnityEngine.Random.Range(-3.0f, 3.0f);
 		float L_87;
 		L_87 = Random_Range_mC15372D42A9ABDCAC3DE82E114D60A40C9C311D2((-3.0f), (3.0f), /*hidden argument*/NULL);
-		V_11 = L_87;
-		// float rZ = UnityEngine.Random.Range(-3.0f, 3.0f);
-		float L_88;
-		L_88 = Random_Range_mC15372D42A9ABDCAC3DE82E114D60A40C9C311D2((-3.0f), (3.0f), /*hidden argument*/NULL);
-		V_12 = L_88;
+		V_12 = L_87;
 		// hitPoseRandom.x += rX;
-		float* L_89 = (&V_9)->get_address_of_x_2();
-		float* L_90 = L_89;
-		float L_91 = *((float*)L_90);
-		float L_92 = V_10;
-		*((float*)L_90) = (float)((float)il2cpp_codegen_add((float)L_91, (float)L_92));
+		float* L_88 = (&V_9)->get_address_of_x_2();
+		float* L_89 = L_88;
+		float L_90 = *((float*)L_89);
+		float L_91 = V_10;
+		*((float*)L_89) = (float)((float)il2cpp_codegen_add((float)L_90, (float)L_91));
 		// hitPoseRandom.y += rY;
-		float* L_93 = (&V_9)->get_address_of_y_3();
-		float* L_94 = L_93;
-		float L_95 = *((float*)L_94);
-		float L_96 = V_11;
-		*((float*)L_94) = (float)((float)il2cpp_codegen_add((float)L_95, (float)L_96));
+		float* L_92 = (&V_9)->get_address_of_y_3();
+		float* L_93 = L_92;
+		float L_94 = *((float*)L_93);
+		float L_95 = V_11;
+		*((float*)L_93) = (float)((float)il2cpp_codegen_add((float)L_94, (float)L_95));
 		// hitPoseRandom.z += rZ;
-		float* L_97 = (&V_9)->get_address_of_z_4();
-		float* L_98 = L_97;
-		float L_99 = *((float*)L_98);
-		float L_100 = V_12;
-		*((float*)L_98) = (float)((float)il2cpp_codegen_add((float)L_99, (float)L_100));
+		float* L_96 = (&V_9)->get_address_of_z_4();
+		float* L_97 = L_96;
+		float L_98 = *((float*)L_97);
+		float L_99 = V_12;
+		*((float*)L_97) = (float)((float)il2cpp_codegen_add((float)L_98, (float)L_99));
+		// AllocateItem(prediction.similar_word, hitPoseRandom, detectedSimilarWord.HitPose.rotation);
+		SimilarWord_t438C87390A661E149FA1B8EBBCA97AABF767A534 * L_100 = V_8;
+		NullCheck(L_100);
+		String_t* L_101 = L_100->get_similar_word_0();
+		Vector3_t65B972D6A585A0A5B63153CF1177A90D3C90D65E  L_102 = V_9;
+		DetectedSimilarWords_t353FC54FEDF384B3E0059F4CF95DC9BEEFA09630 * L_103 = V_4;
+		NullCheck(L_103);
+		Pose_t9F30358E65733E60A1DC8682FDB7104F40C9434A  L_104;
+		L_104 = DetectedSimilarWords_get_HitPose_mB031BD783FACB2487D14D6C1B1BB0C66F6D010DC_inline(L_103, /*hidden argument*/NULL);
+		Quaternion_t6D28618CF65156D4A0AD747370DDFD0C514A31B4  L_105 = L_104.get_rotation_1();
+		SpawnManager_AllocateItem_mD0BDEB4C14F43E250A3A0C7D1B95E709685C88A1(__this, L_101, L_102, L_105, /*hidden argument*/NULL);
+		int32_t L_106 = V_7;
+		V_7 = ((int32_t)il2cpp_codegen_add((int32_t)L_106, (int32_t)1));
 	}
 
-IL_020c:
-	{
-		// AllocateItem(detectedSimilarWord.SimilarWords.word, hitPoseRandom, detectedSimilarWord.HitPose.rotation);
-		DetectedSimilarWords_t353FC54FEDF384B3E0059F4CF95DC9BEEFA09630 * L_101 = V_4;
-		NullCheck(L_101);
-		SimilarWords_t988A750BE36D268FC1BD1C420FD4ADE87BCD50E1 * L_102;
-		L_102 = DetectedSimilarWords_get_SimilarWords_m1617606EA18EEF940340011CAEEEE974C9C13CF0_inline(L_101, /*hidden argument*/NULL);
-		NullCheck(L_102);
-		String_t* L_103 = L_102->get_word_0();
-		Vector3_t65B972D6A585A0A5B63153CF1177A90D3C90D65E  L_104 = V_9;
-		DetectedSimilarWords_t353FC54FEDF384B3E0059F4CF95DC9BEEFA09630 * L_105 = V_4;
-		NullCheck(L_105);
-		Pose_t9F30358E65733E60A1DC8682FDB7104F40C9434A  L_106;
-		L_106 = DetectedSimilarWords_get_HitPose_mB031BD783FACB2487D14D6C1B1BB0C66F6D010DC_inline(L_105, /*hidden argument*/NULL);
-		Quaternion_t6D28618CF65156D4A0AD747370DDFD0C514A31B4  L_107 = L_106.get_rotation_1();
-		SpawnManager_AllocateItem_mD0BDEB4C14F43E250A3A0C7D1B95E709685C88A1(__this, L_103, L_104, L_107, /*hidden argument*/NULL);
-		int32_t L_108 = V_7;
-		V_7 = ((int32_t)il2cpp_codegen_add((int32_t)L_108, (int32_t)1));
-	}
-
-IL_0232:
+IL_0229:
 	{
 		// foreach (var prediction in detectedSimilarWord.SimilarWords.predictions)
-		int32_t L_109 = V_7;
-		SimilarWordU5BU5D_t3D7F79E4A84B915D772E71A3C12299983728928A* L_110 = V_6;
-		NullCheck(L_110);
-		if ((((int32_t)L_109) < ((int32_t)((int32_t)((int32_t)(((RuntimeArray*)L_110)->max_length))))))
+		int32_t L_107 = V_7;
+		SimilarWordU5BU5D_t3D7F79E4A84B915D772E71A3C12299983728928A* L_108 = V_6;
+		NullCheck(L_108);
+		if ((((int32_t)L_107) < ((int32_t)((int32_t)((int32_t)(((RuntimeArray*)L_108)->max_length))))))
 		{
 			goto IL_0144;
 		}
 	}
 
-IL_023d:
+IL_0234:
 	{
 		// RequestSimilarWord();
 		SpawnManager_RequestSimilarWord_m1FCF85118E373CBC233D44D398C2F3528BBADDEB(__this, /*hidden argument*/NULL);
